@@ -153,6 +153,12 @@ jobs:
       params:
         APPLICATION: publisher
         GOVUK_ENVIRONMENT: test
+    - task: run-db-migrations
+      file: govuk-infrastructure/concourse/tasks/run-rake-task.yml
+      params:
+        APPLICATION: publisher
+        GOVUK_ENVIRONMENT: test
+        COMMAND: "rails db:migrate"
     - task: update-ecs-service
       file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
       params:
