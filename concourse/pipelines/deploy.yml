@@ -15,7 +15,7 @@ resources:
     icon: github
     name: govuk-infrastructure
     source:
-      branch: main
+      branch: bilbof/concourse-db
       uri: https://github.com/alphagov/govuk-infrastructure
     type: git
 
@@ -153,11 +153,15 @@ jobs:
       params:
         APPLICATION: publisher
         GOVUK_ENVIRONMENT: test
-    - task: run-db-migrations
-      file: govuk-infrastructure/concourse/tasks/run-rake-task.yml
+    - task: fetch-db-migrations-config
+      file: govuk-infrastructure/concourse/tasks/configure-task.yml
       params:
         APPLICATION: publisher
         GOVUK_ENVIRONMENT: test
+    - task: run-db-migrations
+      file: govuk-infrastructure/concourse/tasks/run-task.yml
+      params:
+        APPLICATION: publisher
         COMMAND: "rails db:migrate"
     - task: update-ecs-service
       file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
