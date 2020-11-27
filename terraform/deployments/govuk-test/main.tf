@@ -24,6 +24,7 @@ provider "aws" {
 
 locals {
   mesh_name             = "${terraform.workspace == "default" ? var.mesh_name : "${var.mesh_name}-${terraform.workspace}"}"
+  ecs_cluster_name      = "${terraform.workspace == "default" ? var.ecs_cluster_name : "${var.ecs_cluster_name}-${terraform.workspace}"}"
   mesh_subdomain        = "${terraform.workspace == "default" ? var.mesh_subdomain : "${var.mesh_subdomain}-${terraform.workspace}"}"
   public_lb_subdomain   = "${terraform.workspace == "default" ? var.public_lb_subdomain : "${var.public_lb_subdomain}-${terraform.workspace}"}"
   mesh_domain           = "${local.mesh_subdomain}.${var.internal_domain}"
@@ -57,6 +58,7 @@ resource "aws_route53_zone" "public" {
 module "govuk" {
   source                = "../../modules/govuk"
   mesh_name             = "${local.mesh_name}"
+  ecs_cluster_name      = "${local.ecs_cluster_name}"
   mesh_domain           = "${local.mesh_domain}"
   public_lb_domain_name = "${local.public_lb_domain_name}"
   internal_domain_name  = "${local.mesh_domain}"

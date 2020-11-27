@@ -18,6 +18,10 @@ variable "ecs_default_capacity_provider" {
   type = string
 }
 
+variable "ecs_cluster_name" {
+  type = string
+}
+
 variable "internal_domain" {
   type = string
 }
