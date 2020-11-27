@@ -14,6 +14,10 @@ variable "mesh_domain" {
   type = string
 }
 
+variable "ecs_cluster_name" {
+  type = string
+}
+
 variable "internal_domain" {
   type = string
 }
