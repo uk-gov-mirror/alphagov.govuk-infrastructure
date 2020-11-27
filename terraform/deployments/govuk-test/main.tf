@@ -18,6 +18,14 @@ provider "aws" {
   region = "eu-west-1"
 }
 
+locals {
+  mesh_name             = "${terraform.workspace == "default" ? var.mesh_name : "${var.mesh_name}-${terraform.workspace}"}"
+  mesh_subdomain        = "${terraform.workspace == "default" ? var.mesh_subdomain : "${var.mesh_subdomain}-${terraform.workspace}"}"
+  public_lb_subdomain   = "${terraform.workspace == "default" ? var.public_lb_subdomain : "${var.public_lb_subdomain}-${terraform.workspace}"}"
+  mesh_domain           = "${local.mesh_subdomain}.${var.internal_domain}"
+  public_lb_domain_name = "${local.public_lb_subdomain}.${var.public_domain}"
+}
+
 data "terraform_remote_state" "infra_networking" {
   backend = "s3"
   config = {
@@ -36,12 +44,16 @@ data "terraform_remote_state" "infra_security_groups" {
   }
 }
 
+resource "aws_route53_zone" "public" {
+  name         = local.public_lb_domain_name
+}
+
 module "govuk" {
   source                = "../../modules/govuk"
-  mesh_name             = var.mesh_name
-  mesh_domain           = var.mesh_domain
-  public_lb_domain_name = var.public_lb_domain_name
-  internal_domain_name  = var.internal_domain_name
+  mesh_name             = "${local.mesh_name}"
+  mesh_domain           = "${local.mesh_domain}"
+  public_lb_domain_name = "${local.public_lb_domain_name}"
+  internal_domain_name  = "${local.mesh_domain}"
 
   vpc_id                            = data.terraform_remote_state.infra_networking.outputs.vpc_id
   private_subnets                   = data.terraform_remote_state.infra_networking.outputs.private_subnet_ids
@@ -66,4 +78,5 @@ module "govuk" {
   signon_desired_count              = var.signon_desired_count
   static_desired_count              = var.static_desired_count
   draft_static_desired_count        = var.draft_static_desired_count
+  depends_on                        = [aws_route53_zone.public]
 }

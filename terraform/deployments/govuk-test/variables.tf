@@ -6,7 +6,23 @@ variable "mesh_name" {
   type = string
 }
 
+variable "mesh_subdomain" {
+  type = string
+}
+
 variable "mesh_domain" {
+  type = string
+}
+
+variable "internal_domain" {
+  type = string
+}
+
+variable "public_domain" {
+  type = string
+}
+
+variable "public_lb_subdomain" {
   type = string
 }
 
