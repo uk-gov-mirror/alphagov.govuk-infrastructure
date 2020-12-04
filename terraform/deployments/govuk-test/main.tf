@@ -19,6 +19,8 @@ provider "aws" {
 }
 
 locals {
+  # TODO - should we call the "mesh-name" local something a bit more general?
+  # It will be like govuk-$workspace, and might be used in multiple places
   mesh_name             = "${terraform.workspace == "default" ? var.mesh_name : "${var.mesh_name}-${terraform.workspace}"}"
   ecs_cluster_name      = "${terraform.workspace == "default" ? var.ecs_cluster_name : "${var.ecs_cluster_name}-${terraform.workspace}"}"
   mesh_subdomain        = "${terraform.workspace == "default" ? var.mesh_subdomain : "${var.mesh_subdomain}-${terraform.workspace}"}"
@@ -51,11 +53,11 @@ resource "aws_route53_zone" "public" {
 
 module "govuk" {
   source                = "../../modules/govuk"
-  mesh_name             = "${local.mesh_name}"
-  ecs_cluster_name      = "${local.ecs_cluster_name}"
-  mesh_domain           = "${local.mesh_domain}"
-  public_lb_domain_name = "${local.public_lb_domain_name}"
-  internal_domain_name  = "${local.mesh_domain}"
+  mesh_name             = local.mesh_name
+  ecs_cluster_name      = local.ecs_cluster_name
+  mesh_domain           = local.mesh_domain
+  public_lb_domain_name = local.public_lb_domain_name
+  internal_domain_name  = var.internal_domain_name
 
   vpc_id                            = data.terraform_remote_state.infra_networking.outputs.vpc_id
   private_subnets                   = data.terraform_remote_state.infra_networking.outputs.private_subnet_ids
@@ -80,5 +82,6 @@ module "govuk" {
   signon_desired_count              = var.signon_desired_count
   static_desired_count              = var.static_desired_count
   draft_static_desired_count        = var.draft_static_desired_count
+  elasticache_cluster_name          = local.mesh_name
   depends_on                        = [aws_route53_zone.public]
 }

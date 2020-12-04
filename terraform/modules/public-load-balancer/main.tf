@@ -1,12 +1,12 @@
 # TODO: use a single, ACM-managed cert with both domains on. There is already
 # such a cert in integration/staging/prod (but it needs defining in Terraform).
 data "aws_acm_certificate" "public_lb_default" {
-  domain   = "*.${var.public_lb_domain_name}"
+  domain   = "*.test.govuk.digital" # TODO - don't hardcode this (Roch's working on this)
   statuses = ["ISSUED"]
 }
 
 data "aws_acm_certificate" "public_lb_alternate" {
-  domain   = "*.${var.app_domain}"
+  domain   = "*.test.publishing.service.gov.uk" # TODO - don't hardcode this (Roch's working on this)
   statuses = ["ISSUED"]
 }
 

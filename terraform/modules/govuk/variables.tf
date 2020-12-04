@@ -139,3 +139,7 @@ variable "redis_subnets" {
   description = "Subnet IDs to use for Redis cluster"
   type        = list
 }
+
+variable "elasticache_cluster_name" {
+  type    = string
+}

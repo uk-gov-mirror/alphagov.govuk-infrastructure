@@ -1,6 +1,5 @@
-variable "cluster_name" {
+variable "elasticache_cluster_name" {
   type    = string
-  default = "shared"
 }
 
 variable "internal_domain_name" {

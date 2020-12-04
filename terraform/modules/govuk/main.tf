@@ -181,8 +181,9 @@ module "signon_service" {
 }
 
 module "shared_redis_cluster" {
-  source               = "../../modules/redis"
-  vpc_id               = var.vpc_id
-  internal_domain_name = var.internal_domain_name
-  subnet_ids           = var.redis_subnets
+  source                   = "../../modules/redis"
+  vpc_id                   = var.vpc_id
+  internal_domain_name     = var.internal_domain_name
+  subnet_ids               = var.redis_subnets
+  elasticache_cluster_name = var.elasticache_cluster_name
 }
