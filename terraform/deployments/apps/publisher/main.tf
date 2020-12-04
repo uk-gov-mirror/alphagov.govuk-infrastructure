@@ -22,7 +22,7 @@ provider "aws" {
   }
 }
 
-
+# TODO - read these from remote state instead of using data sources
 data "aws_secretsmanager_secret" "asset_manager_bearer_token" {
   name = "publisher_app-ASSET_MANAGER_BEARER_TOKEN"
 }
@@ -78,7 +78,13 @@ data "aws_iam_role" "task" {
 }
 
 locals {
+  # TODO - read these from remote state instead of using locals
+  statsd_host                      = "statsd.${var.mesh_domain}"            # TODO: Put Statsd in App Mesh
   redis_port                       = 6379
+  website_root                     = "https://frontend.${var.app_domain}"   # TODO: Change back to www once router is up
+  assets_url                       = "https://static-ecs.${var.app_domain}"
+  service_discovery_namespace_name = var.mesh_domain
+
   container_definition = {
     # TODO: factor out all the remaining hardcoded values (see ../content-store for an example where this has been done)
     "image" : "govuk/publisher:${var.image_tag}", # TODO: use deployed-to-production label or similar.
@@ -216,7 +222,12 @@ module "web" {
   memory             = 1024
   execution_role_arn = data.aws_iam_role.execution.arn
   task_role_arn      = data.aws_iam_role.task.arn
-  container_definitions = [merge(local.container_definition, {name: "publisher-web" })]
+  container_definitions = [
+    merge(
+      local.container_definition,
+      {name: "publisher-web" }
+    )
+  ]
 }
 
 module "worker" {
