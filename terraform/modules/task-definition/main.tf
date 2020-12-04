@@ -26,7 +26,7 @@ locals {
         "logDriver" : "awslogs",
         "options" : {
           "awslogs-create-group" : "true",
-          "awslogs-group" : "awslogs-fargate",
+          "awslogs-group" : "awslogs-fargate", # TODO: this log group should vary by terraform.workspace
           "awslogs-region" : "eu-west-1", # TODO: hardcoded
           "awslogs-stream-prefix" : "awslogs-${var.service_name}-envoy"
         }
