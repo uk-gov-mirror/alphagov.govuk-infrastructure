@@ -214,37 +214,79 @@ locals {
   }
 }
 
-module "web" {
-  source             = "../../../modules/task-definition"
-  mesh_name          = var.mesh_name
-  service_name       = "publisher-web"
-  cpu                = 512
-  memory             = 1024
-  execution_role_arn = data.aws_iam_role.execution.arn
-  task_role_arn      = data.aws_iam_role.task.arn
-  container_definitions = [
-    merge(
-      local.container_definition,
-      {name: "publisher-web" }
-    )
-  ]
+module "envoy_settings_web" {
+  source       = "../../../modules/envoy-settings"
+  mesh_name    = var.mesh_name
+  service_name = "publisher-web"
 }
 
-module "worker" {
-  source             = "../../../modules/task-definition"
-  mesh_name          = var.mesh_name
-  service_name       = "publisher-worker"
-  cpu                = 512
-  memory             = 1024
-  execution_role_arn = data.aws_iam_role.execution.arn
-  task_role_arn      = data.aws_iam_role.task.arn
-  container_definitions = [
+module "envoy_settings_worker" {
+  source       = "../../../modules/envoy-settings"
+  mesh_name    = var.mesh_name
+  service_name = "publisher-worker"
+}
+
+resource "aws_ecs_task_definition" "web" {
+  family                   = "publisher-web"
+  requires_compatibilities = ["FARGATE"]
+  container_definitions    = jsonencode([
+    merge(
+      local.container_definition,
+      { name: "publisher-web" }
+    ),
+    module.envoy_settings_web.container_definition
+  ])
+
+  network_mode             = "awsvpc"
+  cpu                      = 512
+  memory                   = 1024
+  task_role_arn            = data.aws_iam_role.task.arn
+  execution_role_arn       = data.aws_iam_role.execution.arn
+
+  proxy_configuration {
+    type           = "APPMESH"
+    container_name = "envoy"
+
+    properties = {
+      AppPorts         = "80"
+      EgressIgnoredIPs = module.envoy_settings_web.egress_ignored_ips
+      IgnoredUID       = module.envoy_settings_web.ignored_uid
+      ProxyEgressPort  = module.envoy_settings_web.proxy_egress_port
+      ProxyIngressPort = module.envoy_settings_web.proxy_ingress_port
+    }
+  }
+}
+
+resource "aws_ecs_task_definition" "worker" {
+  family                   = "publisher-worker"
+  requires_compatibilities = ["FARGATE"]
+  container_definitions    = jsonencode([
     merge(
       local.container_definition,
       {
-        name: "publisher-worker",
+        name: "publisher-worker" ,
         command: ["foreman", "run", "worker"]
       }
-    )
-  ]
+    ),
+    module.envoy_settings_worker.container_definition
+  ])
+
+  network_mode             = "awsvpc"
+  cpu                      = 512
+  memory                   = 1024
+  task_role_arn            = data.aws_iam_role.task.arn
+  execution_role_arn       = data.aws_iam_role.execution.arn
+
+  proxy_configuration {
+    type           = "APPMESH"
+    container_name = "envoy"
+
+    properties = {
+      AppPorts         = "80"
+      EgressIgnoredIPs = module.envoy_settings_worker.egress_ignored_ips
+      IgnoredUID       = module.envoy_settings_worker.ignored_uid
+      ProxyEgressPort  = module.envoy_settings_worker.proxy_egress_port
+      ProxyIngressPort = module.envoy_settings_worker.proxy_ingress_port
+    }
+  }
 }
