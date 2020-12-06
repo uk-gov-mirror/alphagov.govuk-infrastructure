@@ -31,6 +31,16 @@ output "container_definition" {
   }
 }
 
+output "proxy_properties" {
+  value = {
+    AppPorts         = "80"
+    EgressIgnoredIPs = "169.254.170.2,169.254.169.254" # TODO: no longer required (try omitting, might need to stay but empty?)
+    IgnoredUID       = "1337"
+    ProxyEgressPort  = 15001
+    ProxyIngressPort = 15000
+  }
+}
+
 output "egress_ignored_ips" {
   value = "169.254.170.2,169.254.169.254" # TODO: no longer required (try omitting, might need to stay but empty?)
 }

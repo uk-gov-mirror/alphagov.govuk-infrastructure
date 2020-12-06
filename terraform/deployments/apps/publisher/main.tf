@@ -246,14 +246,7 @@ resource "aws_ecs_task_definition" "web" {
   proxy_configuration {
     type           = "APPMESH"
     container_name = "envoy"
-
-    properties = {
-      AppPorts         = "80"
-      EgressIgnoredIPs = module.envoy_settings_web.egress_ignored_ips
-      IgnoredUID       = module.envoy_settings_web.ignored_uid
-      ProxyEgressPort  = module.envoy_settings_web.proxy_egress_port
-      ProxyIngressPort = module.envoy_settings_web.proxy_ingress_port
-    }
+    properties     = module.envoy_settings.proxy_properties
   }
 }
 
@@ -280,13 +273,6 @@ resource "aws_ecs_task_definition" "worker" {
   proxy_configuration {
     type           = "APPMESH"
     container_name = "envoy"
-
-    properties = {
-      AppPorts         = "80"
-      EgressIgnoredIPs = module.envoy_settings_worker.egress_ignored_ips
-      IgnoredUID       = module.envoy_settings_worker.ignored_uid
-      ProxyEgressPort  = module.envoy_settings_worker.proxy_egress_port
-      ProxyIngressPort = module.envoy_settings_worker.proxy_ingress_port
-    }
+    properties     = module.envoy_settings.proxy_properties
   }
 }
