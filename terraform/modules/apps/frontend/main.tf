@@ -89,12 +89,8 @@ resource "aws_security_group" "public_alb" {
   description = "${var.service_name} Internet-facing ALB"
 }
 
-data "aws_route53_zone" "public" {
-  name = var.public_lb_domain_name
-}
-
 resource "aws_route53_record" "public_alb" {
-  zone_id = data.aws_route53_zone.public.zone_id
+  zone_id = var.public_hosted_zone_id
   name    = var.service_name
   type    = "A"
 

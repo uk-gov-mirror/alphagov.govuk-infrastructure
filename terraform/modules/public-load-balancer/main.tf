@@ -48,12 +48,8 @@ resource "aws_lb_listener" "public" {
   }
 }
 
-data "aws_route53_zone" "public" {
-  name = var.public_lb_domain_name
-}
-
 resource "aws_route53_record" "public_alb" {
-  zone_id = data.aws_route53_zone.public.zone_id
+  zone_id = var.public_hosted_zone_id
   name    = var.dns_a_record_name
   type    = "A"
 

@@ -23,11 +23,9 @@ provider "aws" {
 }
 
 locals {
-  mesh_name             = "${terraform.workspace == "default" ? var.mesh_name : "${var.mesh_name}-${terraform.workspace}"}"
   ecs_cluster_name      = "${terraform.workspace == "default" ? var.ecs_cluster_name : "${var.ecs_cluster_name}-${terraform.workspace}"}"
-  mesh_subdomain        = "${terraform.workspace == "default" ? var.mesh_subdomain : "${var.mesh_subdomain}-${terraform.workspace}"}"
-  public_lb_subdomain   = "${terraform.workspace == "default" ? var.public_lb_subdomain : "${var.public_lb_subdomain}-${terraform.workspace}"}"
-  mesh_domain           = "${local.mesh_subdomain}.${var.internal_domain}"
+  public_lb_subdomain   = "${terraform.workspace == "default" ? var.govuk_environment : "${terraform.workspace}.${var.govuk_environment}"}"
+  mesh_domain           = "${terraform.workspace}.${var.mesh_subdomain}.${var.internal_domain}"
   public_lb_domain_name = "${local.public_lb_subdomain}.${var.public_domain}"
 }
 
@@ -53,10 +51,10 @@ data "terraform_remote_state" "infra_security_groups" {
 
 module "govuk" {
   source                = "../../modules/govuk"
-  mesh_name             = "${local.mesh_name}"
+  mesh_name             = var.mesh_name
   ecs_cluster_name      = "${local.ecs_cluster_name}"
   mesh_domain           = "${local.mesh_domain}"
-  public_lb_domain_name = "${local.public_lb_domain_name}"
+  public_lb_domain_name = local.public_lb_domain_name
   internal_domain_name  = "${local.mesh_domain}"
 
   ecs_default_capacity_provider = var.ecs_default_capacity_provider
@@ -64,6 +62,7 @@ module "govuk" {
   vpc_id                            = data.terraform_remote_state.infra_networking.outputs.vpc_id
   private_subnets                   = data.terraform_remote_state.infra_networking.outputs.private_subnet_ids
   public_subnets                    = data.terraform_remote_state.infra_networking.outputs.public_subnet_ids
+  public_hosted_zone_id             = aws_route53_zone.workspace_public.zone_id
   redis_subnets                     = data.terraform_remote_state.infra_networking.outputs.private_subnet_elasticache_ids
   govuk_management_access_sg_id     = data.terraform_remote_state.infra_security_groups.outputs.sg_management_id
   documentdb_security_group_id      = data.terraform_remote_state.infra_security_groups.outputs.sg_shared_documentdb_id
@@ -84,5 +83,10 @@ module "govuk" {
   signon_desired_count              = var.signon_desired_count
   static_desired_count              = var.static_desired_count
   draft_static_desired_count        = var.draft_static_desired_count
-  depends_on                        = [aws_route53_zone.public, aws_acm_certificate_validation.public]
+  depends_on                        = [
+    aws_route53_zone.workspace_public,
+    aws_acm_certificate_validation.workspace_public,
+    aws_route53_record.workspace_public,
+    aws_acm_certificate.workspace_public,
+  ]
 }

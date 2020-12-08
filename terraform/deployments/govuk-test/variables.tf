@@ -30,11 +30,7 @@ variable "public_domain" {
   type = string
 }
 
-variable "public_lb_subdomain" {
-  type = string
-}
-
-variable "public_lb_domain_name" {
+variable "govuk_environment" {
   type = string
 }
 
