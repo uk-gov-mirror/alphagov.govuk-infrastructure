@@ -22,6 +22,11 @@ variable "internal_domain_name" {
   type = string
 }
 
+variable "restrict_external_access" {
+  description = "If true, block all external network traffic to/from the VPC except for office_cidrs_list, via a network ACL."
+  type        = bool
+}
+
 variable "govuk_aws_state_bucket" {
   type        = string
   description = "The name of the S3 bucket used for govuk-aws's terraform state files"

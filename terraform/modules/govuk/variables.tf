@@ -126,6 +126,11 @@ variable "signon_desired_count" {
   type        = number
 }
 
+variable "restrict_external_access" {
+  description = "If true, block all external network traffic to/from the VPC except for office_cidrs_list, via a network ACL."
+  type        = bool
+}
+
 variable "office_cidrs_list" {
   description = "List of GDS office CIDRs"
   type        = list

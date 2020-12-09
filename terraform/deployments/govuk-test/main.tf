@@ -48,6 +48,7 @@ module "govuk" {
   mesh_domain           = var.mesh_domain
   public_lb_domain_name = var.public_lb_domain_name
   internal_domain_name  = var.internal_domain_name
+  restrict_external_access = var.restrict_external_access
 
   ecs_default_capacity_provider = var.ecs_default_capacity_provider
 
