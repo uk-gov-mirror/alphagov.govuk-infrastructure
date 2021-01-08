@@ -30,6 +30,10 @@ variable "public_domain" {
   type = string
 }
 
+variable "root_public_zone_id" {
+  type = string
+}
+
 variable "public_lb_domain_name" {
   type = string
 }

@@ -11,7 +11,8 @@ resource "aws_route53_record" "workspace_public_zone_ns" {
   type    = "NS"
   ttl     = "30"
 
-  records = aws_route53_zone.workspace_public.name_servers
+  records = aws_route53_zone.workspace_public[0].name_servers
+  count = "${terraform.workspace == "default" ? 0 : 1}"
 }
 
 resource "aws_acm_certificate" "workspace_public" {
@@ -21,14 +22,17 @@ resource "aws_acm_certificate" "workspace_public" {
   lifecycle {
     create_before_destroy = true
   }
+  count = "${terraform.workspace == "default" ? 0 : 1}"
 }
 
 resource "aws_route53_zone" "workspace_public" {
-  name = local.public_lb_domain_name # plouf.test.govuk.digital
+  name  = local.public_lb_domain_name # plouf.test.govuk.digital
+  count = "${terraform.workspace == "default" ? 0 : 1}"
 }
 
 resource "aws_route53_zone" "internal_public" {
-  name = local.internal_domain_name # plouf.test.govuk-internal.digital
+  name  = local.internal_domain_name # plouf.test.govuk-internal.digital
+  count = "${terraform.workspace == "default" ? 0 : 1}"
 }
 
 resource "aws_route53_zone" "internal_private" {
@@ -37,15 +41,16 @@ resource "aws_route53_zone" "internal_private" {
   vpc {
     vpc_id = data.terraform_remote_state.infra_networking.outputs.vpc_id
   }
+  count = "${terraform.workspace == "default" ? 0 : 1}"
 
 }
 
 resource "aws_route53_record" "workspace_public" {
   for_each = {
-    for dvo in aws_acm_certificate.workspace_public.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
+    for dvo in "${length(aws_acm_certificate.workspace_public) > 0 ? aws_acm_certificate.workspace_public[0].domain_validation_options : []}" : dvo.domain_name => {
+      name    = dvo.resource_record_name
+      record  = dvo.resource_record_value
+      type    = dvo.resource_record_type
     }
   }
 
@@ -54,10 +59,11 @@ resource "aws_route53_record" "workspace_public" {
   records         = [each.value.record]
   ttl             = 60
   type            = each.value.type
-  zone_id         = aws_route53_zone.workspace_public.zone_id
+  zone_id         = "${length(aws_route53_zone.workspace_public) > 0 ? aws_route53_zone.workspace_public[0].zone_id : "plouf"}"
 }
 
 resource "aws_acm_certificate_validation" "workspace_public" {
-  certificate_arn         = aws_acm_certificate.workspace_public.arn
+  certificate_arn         = "${length(aws_acm_certificate.workspace_public) > 0 ? aws_acm_certificate.workspace_public[0].arn : ""}"
   validation_record_fqdns = [for record in aws_route53_record.workspace_public : record.fqdn]
+  count = "${terraform.workspace == "default" ? 0 : 1}"
 }
