@@ -89,7 +89,6 @@ locals {
 
   # TODO fix all the var. whatevers.
   environment_variables = {
-    ASSET_HOST                       = var.asset_host,
     BASIC_AUTH_USERNAME              = "gds",
     EMAIL_GROUP_BUSINESS             = "test-address@digital.cabinet-office.gov.uk",
     EMAIL_GROUP_CITIZEN              = "test-address@digital.cabinet-office.gov.uk",
@@ -97,37 +96,36 @@ locals {
     EMAIL_GROUP_FORCE_PUBLISH_ALERTS = "test-address@digital.cabinet-office.gov.uk",
     FACT_CHECK_SUBJECT_PREFIX        = "dev",
     FACT_CHECK_USERNAME              = "govuk-fact-check-test@digital.cabinet-office.gov.uk",
-    GOVUK_APP_DOMAIN                 = var.service_discovery_namespace_name,
-    GOVUK_APP_DOMAIN_EXTERNAL        = var.govuk_app_domain_external,
+    GOVUK_APP_DOMAIN                 = local.mesh_domain,
+    GOVUK_APP_DOMAIN_EXTERNAL        = local.app_domain,
     GOVUK_APP_NAME                   = "publisher",
     GOVUK_APP_ROOT                   = "/app",
     GOVUK_APP_TYPE                   = "rack",
     GOVUK_STATSD_PREFIX              = "fargate",
 
     # TODO: how does GOVUK_ASSET_ROOT relate to ASSET_HOST? Is one a function of the other? Are they both really in use? Is GOVUK_ASSET_ROOT always just https://${ASSET_HOST}?
-    GOVUK_ASSET_ROOT                = "https://assets.test.publishing.service.gov.uk",
+    GOVUK_ASSET_ROOT                = "https://assets.${local.app_domain}", # TODO don't hardcode test
     GOVUK_GROUP                     = "deploy",
     GOVUK_USER                      = "deploy",
-    GOVUK_WEBSITE_ROOT              = var.govuk_website_root,
-    PLEK_SERVICE_CONTENT_STORE_URI  = "https://www.gov.uk/api", # TODO: looks suspicious
-    PLEK_SERVICE_PUBLISHING_API_URI = "http://publishing-api-web.${var.service_discovery_namespace_name}",
-    PLEK_SERVICE_SIGNON_URI         = "https://signon-ecs.${var.govuk_app_domain_external}",
-    PLEK_SERVICE_STATIC_URI         = "https://assets.test.publishing.service.gov.uk",
+    GOVUK_WEBSITE_ROOT              = local.govuk_website_root,
+    PLEK_SERVICE_PUBLISHING_API_URI = "http://publishing-api-web.${local.mesh_domain}",
+    PLEK_SERVICE_SIGNON_URI         = "https://signon-ecs.${local.mesh_domain}",
+    PLEK_SERVICE_STATIC_URI         = "https://assets.${local.mesh_domain}",
 
     # TODO: remove PLEK_SERVICE_DRAFT_ORIGIN_URI once we have the draft origin properly set up with multiple frontends
-    PLEK_SERVICE_DRAFT_ORIGIN_URI = "https://draft-frontend.${var.govuk_app_domain_external}",
+    PLEK_SERVICE_DRAFT_ORIGIN_URI = "https://draft-frontend.${local.app_domain}",
     PORT                          = "80",
     RAILS_ENV                     = "production",
     RAILS_SERVE_STATIC_FILES      = "true", # TODO: temporary hack?
 
     # TODO: we shouldn't be specifying both REDIS_{HOST,PORT} *and* REDIS_URL.
-    REDIS_HOST         = var.redis_host,
-    REDIS_PORT         = tostring(var.redis_port),
-    REDIS_URL          = "redis://${var.redis_host}:${var.redis_port}",
+    REDIS_HOST         = "TODO" # var.redis_host, # TODO - provide this in the terraform outputs of govuk, and use that.
+    REDIS_PORT         = "TODO" # tostring(var.redis_port),
+    REDIS_URL          = "TODO" # "redis://${var.redis_host}:${var.redis_port}",
     STATSD_PROTOCOL    = "tcp",
-    STATSD_HOST        = var.statsd_host,
-    WEBSITE_ROOT       = var.govuk_website_root,
-    SENTRY_ENVIRONMENT = var.sentry_environment
+    STATSD_HOST        = local.statsd_host,
+    WEBSITE_ROOT       = "https://frontend.${local.app_domain}" # TODO - set this back to www once we have router running
+    SENTRY_ENVIRONMENT = local.sentry_environment
   }
 
   secrets_from_arns = {
