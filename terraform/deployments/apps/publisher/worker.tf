@@ -1,6 +1,6 @@
 module "worker_container_definition" {
   source = "../../../modules/app-container-definition"
-  name   = "worker-publisher"
+  name   = "publisher-worker"
   image  = "govuk/publisher:bill-content-schemas" # TODO use "govuk/publisher:${var.image_tag}"
   environment_variables = merge(
     local.environment_variables,
@@ -17,13 +17,13 @@ module "worker_envoy_configuration" {
   source = "../../../modules/envoy-configuration"
 
   mesh_name    = local.mesh_name
-  service_name = "worker-publisher"
+  service_name = "publisher-worker"
   log_group    = local.log_group
   aws_region   = data.aws_region.current.name
 }
 
 resource "aws_ecs_task_definition" "worker" {
-  family                   = "worker-publisher"
+  family                   = "publisher-worker"
   requires_compatibilities = ["FARGATE"]
   container_definitions = jsonencode([
     module.worker_container_definition.value,

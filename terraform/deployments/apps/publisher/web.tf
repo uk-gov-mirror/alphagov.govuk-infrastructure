@@ -1,7 +1,7 @@
 module "web_container_definition" {
   source = "../../../modules/app-container-definition"
   name   = "publisher-web"
-  image  = var.image_tag
+  image  = "govuk/publisher:bill-content-schemas" # TODO use "govuk/publisher:${var.image_tag}"
   environment_variables = merge(
     local.environment_variables,
     {
