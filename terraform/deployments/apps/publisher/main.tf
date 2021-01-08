@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    key     = "projects/publisher-web.tfstate"
+    key     = "projects/publisher.tfstate"
     region  = "eu-west-1"
     encrypt = true
   }
@@ -56,10 +56,6 @@ data "aws_secretsmanager_secret" "publishing_api_bearer_token" {
   name = "publisher_app-PUBLISHING_API_BEARER_TOKEN" # pragma: allowlist secret
 }
 
-data "aws_secretsmanager_secret" "router_api_bearer_token" {
-  name = "content-store_ROUTER_API_BEARER_TOKEN" # pragma: allowlist secret
-}
-
 data "aws_secretsmanager_secret" "secret_key_base" {
   name = "publisher_app-SECRET_KEY_BASE" # pragma: allowlist secret
 }
@@ -95,7 +91,7 @@ locals {
     DEFAULT_TTL                     = 1800,
     GOVUK_APP_DOMAIN                = local.mesh_domain,
     GOVUK_APP_DOMAIN_EXTERNAL       = local.app_domain,
-    GOVUK_APP_NAME                  = "content-store",
+    GOVUK_APP_NAME                  = "publisher",
     GOVUK_APP_TYPE                  = "rack",
     GOVUK_CONTENT_SCHEMAS_PATH      = "/govuk-content-schemas",
     GOVUK_GROUP                     = "deploy",  # TODO: clean up?
@@ -121,7 +117,6 @@ locals {
     GDS_SSO_OAUTH_ID            = data.aws_secretsmanager_secret.oauth_id.arn,
     GDS_SSO_OAUTH_SECRET        = data.aws_secretsmanager_secret.oauth_secret.arn,
     PUBLISHING_API_BEARER_TOKEN = data.aws_secretsmanager_secret.publishing_api_bearer_token.arn,
-    ROUTER_API_BEARER_TOKEN     = data.aws_secretsmanager_secret.router_api_bearer_token.arn,
     SECRET_KEY_BASE             = data.aws_secretsmanager_secret.secret_key_base.arn,
     SENTRY_DSN                  = data.aws_secretsmanager_secret.sentry_dsn.arn,
   }

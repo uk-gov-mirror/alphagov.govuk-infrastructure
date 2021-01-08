@@ -1,10 +1,11 @@
 module "web_container_definition" {
   source = "../../../modules/app-container-definition"
-  name   = "web-publisher"
+  name   = "publisher-web"
   image  = var.image_tag
   environment_variables = merge(
     local.environment_variables,
     {
+      # TODO - which env vars need to be different for web vs. worker
     },
   )
   log_group             = local.log_group
@@ -17,13 +18,13 @@ module "web_envoy_configuration" {
   source = "../../../modules/envoy-configuration"
 
   mesh_name    = local.mesh_name
-  service_name = "web-publisher"
+  service_name = "publisher-web"
   log_group    = local.log_group
   aws_region   = data.aws_region.current.name
 }
 
 resource "aws_ecs_task_definition" "web" {
-  family                   = "web-publisher"
+  family                   = "publisher-web"
   requires_compatibilities = ["FARGATE"]
   container_definitions = jsonencode([
     module.web_container_definition.value,
