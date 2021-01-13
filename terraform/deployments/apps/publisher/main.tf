@@ -118,10 +118,8 @@ locals {
     RAILS_ENV                     = "production",
     RAILS_SERVE_STATIC_FILES      = "true", # TODO: temporary hack?
 
-    # TODO: we shouldn't be specifying both REDIS_{HOST,PORT} *and* REDIS_URL.
-    REDIS_HOST         = "TODO" # var.redis_host, # TODO - provide this in the terraform outputs of govuk, and use that.
-    REDIS_PORT         = "TODO" # tostring(var.redis_port),
-    REDIS_URL          = "TODO" # "redis://${var.redis_host}:${var.redis_port}",
+    REDIS_HOST         = data.terraform_remote_state.govuk.outputs.redis_host
+    REDIS_PORT         = data.terraform_remote_state.govuk.outputs.redis_port
     STATSD_PROTOCOL    = "tcp",
     STATSD_HOST        = local.statsd_host,
     WEBSITE_ROOT       = "https://frontend.${local.app_domain}" # TODO - set this back to www once we have router running
