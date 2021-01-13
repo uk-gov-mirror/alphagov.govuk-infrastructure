@@ -1,6 +1,10 @@
 variable "name" {
   type = string
 }
+variable "command" {
+  type    = list
+  default = []
+}
 variable "image" {
   type = string
 }
@@ -32,6 +36,7 @@ variable "ports" {
 output "value" {
   value = {
     "name" : var.name,
+    "command" : var.command,
     "image" : var.image,
     "essential" : true,
     "environment" : [for key, value in var.environment_variables : { name : key, value : tostring(value) }],

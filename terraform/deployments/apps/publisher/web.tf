@@ -1,13 +1,11 @@
 module "web_container_definition" {
-  source = "../../../modules/app-container-definition"
-  name   = "publisher-web"
-  image  = "govuk/publisher:bill-content-schemas" # TODO use "govuk/publisher:${var.image_tag}"
-  environment_variables = merge(
-    local.environment_variables,
-    {
-      # TODO - which env vars need to be different for web vs. worker
-    },
-  )
+  source  = "../../../modules/app-container-definition"
+  name    = "publisher-web"
+  command = ["foreman", "run", "web"]
+
+  image = "govuk/publisher:bill-content-schemas" # TODO use "govuk/publisher:${var.image_tag}"
+
+  environment_variables = local.environment_variables
   log_group             = local.log_group
   secrets_from_arns     = local.secrets_from_arns
   aws_region            = data.aws_region.current.name

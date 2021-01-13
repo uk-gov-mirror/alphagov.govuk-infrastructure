@@ -67,7 +67,7 @@ data "terraform_remote_state" "govuk" {
   backend   = "s3"
   workspace = terraform.workspace
   config = {
-    bucket   = "govuk-terraform-${var.environment}"
+    bucket   = "govuk-terraform-${var.govuk_environment}"
     key      = "projects/govuk.tfstate"
     region   = data.aws_region.current.name
     role_arn = var.assume_role_arn
@@ -84,10 +84,6 @@ locals {
   mesh_domain                    = data.terraform_remote_state.govuk.outputs.mesh_domain
   mesh_name                      = data.terraform_remote_state.govuk.outputs.mesh_name
 
-  sentry_environment = "${var.environment}-ecs"
-  statsd_host        = "statsd.${local.mesh_domain}" # TODO: Put Statsd in App Mesh
-
-  # TODO fix all the var. whatevers.
   environment_variables = {
     BASIC_AUTH_USERNAME              = "gds",
     EMAIL_GROUP_BUSINESS             = "test-address@digital.cabinet-office.gov.uk",
@@ -104,26 +100,31 @@ locals {
     GOVUK_STATSD_PREFIX              = "fargate",
 
     # TODO: how does GOVUK_ASSET_ROOT relate to ASSET_HOST? Is one a function of the other? Are they both really in use? Is GOVUK_ASSET_ROOT always just https://${ASSET_HOST}?
-    GOVUK_ASSET_ROOT                = "https://assets.${local.app_domain}", # TODO don't hardcode test
+    GOVUK_ASSET_ROOT                = "https://assets.${local.app_domain}",
     GOVUK_GROUP                     = "deploy",
     GOVUK_USER                      = "deploy",
     GOVUK_WEBSITE_ROOT              = local.govuk_website_root,
     PLEK_SERVICE_PUBLISHING_API_URI = "http://publishing-api-web.${local.mesh_domain}",
     PLEK_SERVICE_SIGNON_URI         = "https://signon-ecs.${local.mesh_domain}",
-    PLEK_SERVICE_STATIC_URI         = "https://assets.${local.mesh_domain}",
+    PLEK_SERVICE_STATIC_URI         = "https://static.${local.mesh_domain}",
 
     # TODO: remove PLEK_SERVICE_DRAFT_ORIGIN_URI once we have the draft origin properly set up with multiple frontends
     PLEK_SERVICE_DRAFT_ORIGIN_URI = "https://draft-frontend.${local.app_domain}",
     PORT                          = "80",
     RAILS_ENV                     = "production",
-    RAILS_SERVE_STATIC_FILES      = "true", # TODO: temporary hack?
+    RAILS_SERVE_STATIC_FILES      = "true", # TODO: temporary hack
 
-    REDIS_HOST         = data.terraform_remote_state.govuk.outputs.redis_host
-    REDIS_PORT         = data.terraform_remote_state.govuk.outputs.redis_port
+    # Some apps want REDIS_HOST / REDIS_PORT, others REDIS_URL.
+    # The only way to be consistent across apps is to provide both forms.
+    # Tech debt card: https://trello.com/c/dXud4WIt/206-inconsistent-redisurl-config
+    REDIS_HOST = data.terraform_remote_state.govuk.outputs.redis_host
+    REDIS_PORT = data.terraform_remote_state.govuk.outputs.redis_port
+    REDIS_URL  = "redis://${data.terraform_remote_state.govuk.outputs.redis_host}:${data.terraform_remote_state.govuk.outputs.redis_port}"
+
     STATSD_PROTOCOL    = "tcp",
-    STATSD_HOST        = local.statsd_host,
+    STATSD_HOST        = "statsd.${local.mesh_domain}"
     WEBSITE_ROOT       = "https://frontend.${local.app_domain}" # TODO - set this back to www once we have router running
-    SENTRY_ENVIRONMENT = local.sentry_environment
+    SENTRY_ENVIRONMENT = "${var.govuk_environment}-ecs"
   }
 
   secrets_from_arns = {

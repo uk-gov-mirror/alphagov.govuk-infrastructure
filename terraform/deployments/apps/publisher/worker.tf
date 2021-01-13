@@ -1,12 +1,11 @@
 module "worker_container_definition" {
-  source = "../../../modules/app-container-definition"
-  name   = "publisher-worker"
-  image  = "govuk/publisher:bill-content-schemas" # TODO use "govuk/publisher:${var.image_tag}"
-  environment_variables = merge(
-    local.environment_variables,
-    {
-    },
-  )
+  source  = "../../../modules/app-container-definition"
+  name    = "publisher-worker"
+  command = ["foreman", "run", "worker"]
+
+  image = "govuk/publisher:bill-content-schemas" # TODO use "govuk/publisher:${var.image_tag}"
+
+  environment_variables = local.environment_variables
   log_group             = local.log_group
   secrets_from_arns     = local.secrets_from_arns
   aws_region            = data.aws_region.current.name
