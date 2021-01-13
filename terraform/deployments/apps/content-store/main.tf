@@ -74,9 +74,6 @@ locals {
     data.terraform_remote_state.govuk_aws_mongo.outputs.mongo_3_service_dns_name,
   ])
 
-  sentry_environment = "${var.govuk_environment}-ecs"
-  statsd_host        = "statsd.${local.mesh_domain}" # TODO: Duplicated, move into variable
-
   environment_variables = {
     DEFAULT_TTL                     = 1800,
     GOVUK_APP_DOMAIN                = local.mesh_domain,
@@ -86,9 +83,9 @@ locals {
     GOVUK_CONTENT_SCHEMAS_PATH      = "/govuk-content-schemas",
     GOVUK_GROUP                     = "deploy",  # TODO: clean up?
     GOVUK_STATSD_PREFIX             = "fargate", # TODO: use a better prefix?
-    GOVUK_STATSD_HOST               = local.statsd_host
+    GOVUK_STATSD_HOST               = "statsd.${local.mesh_domain}"
     GOVUK_STATSD_PROTOCOL           = "tcp"
-    GOVUK_USER                      = "deploy",  # TODO: clean up?
+    GOVUK_USER                      = "deploy", # TODO: clean up?
     GOVUK_WEBSITE_ROOT              = local.govuk_website_root,
     PLEK_SERVICE_PUBLISHING_API_URI = "http://publishing-api-web.${local.mesh_domain}",
     PLEK_SERVICE_ROUTER_API_URI     = "http://router-api.${local.mesh_domain}",
@@ -97,7 +94,7 @@ locals {
     PLEK_SERVICE_SPOTLIGHT_URI      = "",
     PORT                            = 80,
     RAILS_ENV                       = "production",
-    SENTRY_ENVIRONMENT              = local.sentry_environment,
+    SENTRY_ENVIRONMENT              = "${var.govuk_environment}-ecs",
     UNICORN_WORKER_PROCESSES        = 12,
 
     PLEK_SERVICE_PERFORMANCEPLATFORM_BIG_SCREEN_VIEW_URI = "",
