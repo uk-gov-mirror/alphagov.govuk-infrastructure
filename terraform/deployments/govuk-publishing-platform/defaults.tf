@@ -18,7 +18,7 @@ locals {
     }
 
     asset_host              = "https://frontend.${aws_route53_zone.external.name}",
-    asset_root_url          = "https://assets.${var.publishing_service_domain}",
+    asset_root_url          = "https://assets.${aws_route53_zone.external.name}",
     content_store_uri       = "http://content-store.${local.mesh_domain}",
     draft_content_store_uri = "http://draft-content-store.${local.mesh_domain}",
     draft_origin_uri        = "https://draft-frontend.${aws_route53_zone.external.name}",

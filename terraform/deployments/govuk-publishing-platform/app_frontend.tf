@@ -26,15 +26,15 @@ module "frontend" {
 module "frontend_public_alb" {
   source = "../../modules/public-load-balancer"
 
-  app_name                  = "frontend"
-  vpc_id                    = local.vpc_id
-  dns_a_record_name         = "frontend"
-  public_subnets            = local.public_subnets
-  external_route53_zone_id  = aws_route53_zone.external.zone_id
-  publishing_service_domain = var.publishing_service_domain
-  service_security_group_id = module.frontend.security_group_id
-  external_cidrs_list       = var.office_cidrs_list
-  health_check_path         = "/"
+  app_name                            = "frontend"
+  vpc_id                              = local.vpc_id
+  dns_a_record_name                   = "frontend"
+  public_subnets                      = local.public_subnets
+  external_route53_zone_id            = aws_route53_zone.external.zone_id
+  external_app_domain_certificate_arn = aws_acm_certificate.external_wildcard.arn
+  service_security_group_id           = module.frontend.security_group_id
+  external_cidrs_list                 = var.office_cidrs_list
+  health_check_path                   = "/"
 }
 
 module "draft_frontend" {
@@ -65,13 +65,13 @@ module "draft_frontend" {
 module "draft_frontend_public_alb" {
   source = "../../modules/public-load-balancer"
 
-  app_name                  = "draft-frontend"
-  vpc_id                    = local.vpc_id
-  dns_a_record_name         = "draft-frontend"
-  public_subnets            = local.public_subnets
-  external_route53_zone_id  = aws_route53_zone.external.zone_id
-  publishing_service_domain = var.publishing_service_domain
-  service_security_group_id = module.draft_frontend.security_group_id
-  external_cidrs_list       = var.office_cidrs_list
-  health_check_path         = "/"
+  app_name                            = "draft-frontend"
+  vpc_id                              = local.vpc_id
+  dns_a_record_name                   = "draft-frontend"
+  public_subnets                      = local.public_subnets
+  external_route53_zone_id            = aws_route53_zone.external.zone_id
+  external_app_domain_certificate_arn = aws_acm_certificate.external_wildcard.arn
+  service_security_group_id           = module.draft_frontend.security_group_id
+  external_cidrs_list                 = var.office_cidrs_list
+  health_check_path                   = "/"
 }

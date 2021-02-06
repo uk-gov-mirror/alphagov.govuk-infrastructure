@@ -21,11 +21,6 @@ variable "ecs_default_capacity_provider" {
   type = string
 }
 
-variable "publishing_service_domain" {
-  type        = string
-  description = "e.g. test.publishing.service.gov.uk"
-}
-
 variable "internal_app_domain" {
   type        = string
   description = "e.g. test.govuk-internal.digital"

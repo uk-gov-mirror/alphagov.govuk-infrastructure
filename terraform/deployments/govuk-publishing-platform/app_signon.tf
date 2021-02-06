@@ -52,11 +52,11 @@ module "signon" {
 module "signon_public_alb" {
   source = "../../modules/public-load-balancer"
 
-  app_name                  = "signon"
-  vpc_id                    = local.vpc_id
-  dns_a_record_name         = "signon-ecs"
-  public_subnets            = local.public_subnets
-  external_route53_zone_id  = aws_route53_zone.external.zone_id
-  publishing_service_domain = var.publishing_service_domain
-  service_security_group_id = module.signon.security_group_id
+  app_name                            = "signon"
+  vpc_id                              = local.vpc_id
+  dns_a_record_name                   = "signon-ecs"
+  public_subnets                      = local.public_subnets
+  external_route53_zone_id            = aws_route53_zone.external.zone_id
+  external_app_domain_certificate_arn = aws_acm_certificate.external_wildcard.arn
+  service_security_group_id           = module.signon.security_group_id
 }

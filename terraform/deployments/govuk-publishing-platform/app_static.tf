@@ -102,27 +102,27 @@ module "draft_static" {
 module "static_public_alb" {
   source = "../../modules/public-load-balancer"
 
-  app_name                  = "static"
-  vpc_id                    = local.vpc_id
-  dns_a_record_name         = "static-ecs"
-  public_subnets            = local.public_subnets
-  external_route53_zone_id  = aws_route53_zone.external.zone_id
-  publishing_service_domain = var.publishing_service_domain
-  service_security_group_id = module.static.security_group_id
-  external_cidrs_list       = var.office_cidrs_list
-  health_check_path         = "/templates/wrapper.html.erb" # TODO: create a proper healthcheck endpoint in static
+  app_name                            = "static"
+  vpc_id                              = local.vpc_id
+  dns_a_record_name                   = "static-ecs"
+  public_subnets                      = local.public_subnets
+  external_route53_zone_id            = aws_route53_zone.external.zone_id
+  external_app_domain_certificate_arn = aws_acm_certificate.external_wildcard.arn
+  service_security_group_id           = module.static.security_group_id
+  external_cidrs_list                 = var.office_cidrs_list
+  health_check_path                   = "/templates/wrapper.html.erb" # TODO: create a proper healthcheck endpoint in static
 }
 
 module "draft_static_public_alb" {
   source = "../../modules/public-load-balancer"
 
-  app_name                  = "draft-static"
-  vpc_id                    = local.vpc_id
-  dns_a_record_name         = "draft-static-ecs"
-  public_subnets            = local.public_subnets
-  external_route53_zone_id  = aws_route53_zone.external.zone_id
-  publishing_service_domain = var.publishing_service_domain
-  service_security_group_id = module.draft_static.security_group_id
-  external_cidrs_list       = var.office_cidrs_list
-  health_check_path         = "/templates/wrapper.html.erb" # TODO: create a proper healthcheck endpoint in static
+  app_name                            = "draft-static"
+  vpc_id                              = local.vpc_id
+  dns_a_record_name                   = "draft-static-ecs"
+  public_subnets                      = local.public_subnets
+  external_route53_zone_id            = aws_route53_zone.external.zone_id
+  external_app_domain_certificate_arn = aws_acm_certificate.external_wildcard.arn
+  service_security_group_id           = module.draft_static.security_group_id
+  external_cidrs_list                 = var.office_cidrs_list
+  health_check_path                   = "/templates/wrapper.html.erb" # TODO: create a proper healthcheck endpoint in static
 }
