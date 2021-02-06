@@ -1,6 +1,6 @@
 variable "external_app_domain" {
   type        = string
-  description = "e.g. test.govuk.digital"
+  description = "e.g. default.test.govuk.digital"
 }
 
 variable "mesh_name" {

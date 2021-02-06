@@ -1,6 +1,6 @@
-variable "external_app_domain" {
+variable "external_route53_zone_id" {
   type        = string
-  description = "e.g. test.govuk.digital. Domain in which to create DNS records for the app's Internet-facing load balancer."
+  description = "e.g. default.test.govuk.digital. Domain in which to create DNS records for the app's Internet-facing load balancer."
 }
 
 variable "app_name" {

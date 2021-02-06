@@ -34,7 +34,7 @@ module "static" {
   environment_variables = merge(
     local.static_defaults.environment_variables,
     {
-      ASSET_HOST          = "https://static-ecs.${var.external_app_domain}", #TODO: fix when router is fully functional
+      ASSET_HOST          = "https://static-ecs.${aws_route53_zone.external.name}", #TODO: fix when router is fully functional
       GOVUK_STATSD_PREFIX = "govuk-ecs.app.static"
     },
   )
@@ -72,7 +72,7 @@ module "draft_static" {
   environment_variables = merge(
     local.static_defaults.environment_variables,
     {
-      ASSET_HOST          = "https://draft-static-ecs.${var.external_app_domain}", #TODO: fix when router is fully functional
+      ASSET_HOST          = "https://draft-static-ecs.${aws_route53_zone.external.name}", #TODO: fix when router is fully functional
       GOVUK_STATSD_PREFIX = "govuk-ecs.app.draft-static"
     },
   )
@@ -106,7 +106,7 @@ module "static_public_alb" {
   vpc_id                    = local.vpc_id
   dns_a_record_name         = "static-ecs"
   public_subnets            = local.public_subnets
-  external_app_domain       = var.external_app_domain
+  external_route53_zone_id  = aws_route53_zone.external.zone_id
   publishing_service_domain = var.publishing_service_domain
   service_security_group_id = module.static.security_group_id
   external_cidrs_list       = var.office_cidrs_list
@@ -120,7 +120,7 @@ module "draft_static_public_alb" {
   vpc_id                    = local.vpc_id
   dns_a_record_name         = "draft-static-ecs"
   public_subnets            = local.public_subnets
-  external_app_domain       = var.external_app_domain
+  external_route53_zone_id  = aws_route53_zone.external.zone_id
   publishing_service_domain = var.publishing_service_domain
   service_security_group_id = module.draft_static.security_group_id
   external_cidrs_list       = var.office_cidrs_list

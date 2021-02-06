@@ -16,7 +16,7 @@ locals {
         EMAIL_GROUP_FORCE_PUBLISH_ALERTS = "test-address@digital.cabinet-office.gov.uk"
         FACT_CHECK_SUBJECT_PREFIX        = "dev"
         FACT_CHECK_USERNAME              = "govuk-fact-check-test@digital.cabinet-office.gov.uk"
-        GOVUK_APP_DOMAIN_EXTERNAL        = var.external_app_domain
+        GOVUK_APP_DOMAIN_EXTERNAL        = aws_route53_zone.external.name
         GOVUK_APP_NAME                   = local.publisher_app_name
         GOVUK_APP_ROOT                   = "/app"
         # TODO: how does GOVUK_ASSET_ROOT relate to ASSET_HOST? Is one a function of the other? Are they both really in use? Is GOVUK_ASSET_ROOT always just "https://${ASSET_HOST}"?
@@ -101,7 +101,7 @@ module "publisher_public_alb" {
   vpc_id                    = local.vpc_id
   dns_a_record_name         = "publisher"
   public_subnets            = local.public_subnets
-  external_app_domain       = var.external_app_domain
+  external_route53_zone_id  = aws_route53_zone.external.zone_id
   publishing_service_domain = var.publishing_service_domain
   service_security_group_id = module.publisher_web.security_group_id
   external_cidrs_list       = var.office_cidrs_list

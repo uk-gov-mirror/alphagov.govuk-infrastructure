@@ -30,7 +30,7 @@ module "frontend_public_alb" {
   vpc_id                    = local.vpc_id
   dns_a_record_name         = "frontend"
   public_subnets            = local.public_subnets
-  external_app_domain       = var.external_app_domain
+  external_route53_zone_id  = aws_route53_zone.external.zone_id
   publishing_service_domain = var.publishing_service_domain
   service_security_group_id = module.frontend.security_group_id
   external_cidrs_list       = var.office_cidrs_list
@@ -69,7 +69,7 @@ module "draft_frontend_public_alb" {
   vpc_id                    = local.vpc_id
   dns_a_record_name         = "draft-frontend"
   public_subnets            = local.public_subnets
-  external_app_domain       = var.external_app_domain
+  external_route53_zone_id  = aws_route53_zone.external.zone_id
   publishing_service_domain = var.publishing_service_domain
   service_security_group_id = module.draft_frontend.security_group_id
   external_cidrs_list       = var.office_cidrs_list

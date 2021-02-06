@@ -56,7 +56,7 @@ module "signon_public_alb" {
   vpc_id                    = local.vpc_id
   dns_a_record_name         = "signon-ecs"
   public_subnets            = local.public_subnets
-  external_app_domain       = var.external_app_domain
+  external_route53_zone_id  = aws_route53_zone.external.zone_id
   publishing_service_domain = var.publishing_service_domain
   service_security_group_id = module.signon.security_group_id
 }
