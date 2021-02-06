@@ -71,7 +71,7 @@ module "task_definition" {
   ]
   cpu                = var.cpu
   execution_role_arn = var.execution_role_arn
-  family             = var.service_name
+  family             = "${var.service_name}-${terraform.workspace}"
   memory             = var.memory
   proxy_configuration = {
     type          = "APPMESH",

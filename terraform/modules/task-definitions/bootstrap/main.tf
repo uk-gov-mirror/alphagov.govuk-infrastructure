@@ -4,7 +4,7 @@
 
 # TODO: Use a specially crafted bootstrap image here?
 resource "aws_ecs_task_definition" "bootstrap" {
-  family                   = var.service_name # must match the ECS Service LB name
+  family                   = "${var.service_name}-${terraform.workspace}" # must match the ECS Service LB name # TODO - is this comment actually correct?
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
