@@ -45,8 +45,3 @@ variable "target_port" {
   type    = number
   default = 80
 }
-
-variable "workspace_suffix" {
-  type    = string
-  default = "govuk" # TODO: Is this the default value?
-}

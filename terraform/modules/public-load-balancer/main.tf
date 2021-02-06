@@ -16,7 +16,7 @@ resource "aws_lb_listener_certificate" "service" {
 }
 
 resource "aws_lb" "public" {
-  name               = "public-${var.app_name}-${var.workspace_suffix}"
+  name               = "public-${var.app_name}-${terraform.workspace}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.public_alb.id]
@@ -24,7 +24,7 @@ resource "aws_lb" "public" {
 }
 
 resource "aws_lb_target_group" "public" {
-  name        = "${var.app_name}-${var.workspace_suffix}-public"
+  name        = "${var.app_name}-${terraform.workspace}-public"
   port        = var.target_port
   protocol    = "HTTP"
   vpc_id      = var.vpc_id

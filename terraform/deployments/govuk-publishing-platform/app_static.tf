@@ -108,7 +108,6 @@ module "static_public_alb" {
   public_subnets            = local.public_subnets
   external_app_domain       = var.external_app_domain
   publishing_service_domain = var.publishing_service_domain
-  workspace_suffix          = "govuk" # TODO: Changeme
   service_security_group_id = module.static.security_group_id
   external_cidrs_list       = var.office_cidrs_list
   health_check_path         = "/templates/wrapper.html.erb" # TODO: create a proper healthcheck endpoint in static
@@ -123,7 +122,6 @@ module "draft_static_public_alb" {
   public_subnets            = local.public_subnets
   external_app_domain       = var.external_app_domain
   publishing_service_domain = var.publishing_service_domain
-  workspace_suffix          = "govuk" # TODO: Changeme
   service_security_group_id = module.draft_static.security_group_id
   external_cidrs_list       = var.office_cidrs_list
   health_check_path         = "/templates/wrapper.html.erb" # TODO: create a proper healthcheck endpoint in static

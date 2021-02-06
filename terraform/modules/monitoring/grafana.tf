@@ -36,7 +36,6 @@ module "grafana_public_alb" {
   public_subnets            = var.public_subnets
   external_app_domain       = var.external_app_domain
   publishing_service_domain = var.publishing_service_domain
-  workspace_suffix          = "govuk" # TODO: Changeme
   service_security_group_id = module.grafana_app.security_group_id
   health_check_path         = "/api/health"
   target_port               = 3000

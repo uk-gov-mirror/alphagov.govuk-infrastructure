@@ -7,11 +7,6 @@ variable "mesh_name" {
   type = string
 }
 
-variable "mesh_domain" {
-  type        = string
-  description = "e.g. mesh.govuk-internal.digital"
-}
-
 variable "redis_host" {
   type        = string
   description = "Shared Redis FQDN"

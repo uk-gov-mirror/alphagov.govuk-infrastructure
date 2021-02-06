@@ -64,7 +64,7 @@ output "mesh_name" {
 }
 
 output "mesh_domain" {
-  value = var.mesh_domain
+  value = local.mesh_domain
 }
 
 output "external_app_domain" {

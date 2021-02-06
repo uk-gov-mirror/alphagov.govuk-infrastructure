@@ -4,7 +4,6 @@ plugin "aws" {
 
 plugin "workspaces" {
   enabled            = true
-  override_workspace = "some-workspace"
 
   resource "aws_appmesh_mesh" {
     attribute = "name"

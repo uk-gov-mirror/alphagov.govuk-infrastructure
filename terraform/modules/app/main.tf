@@ -80,7 +80,7 @@ module "service_mesh_node" {
 }
 
 resource "aws_security_group" "service" {
-  name        = "fargate_${var.service_name}"
+  name        = "fargate_${var.service_name}_${terraform.workspace}"
   vpc_id      = var.vpc_id
   description = "${var.service_name} app ECS tasks"
 }

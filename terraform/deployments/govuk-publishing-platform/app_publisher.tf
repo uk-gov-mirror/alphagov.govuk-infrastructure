@@ -103,7 +103,6 @@ module "publisher_public_alb" {
   public_subnets            = local.public_subnets
   external_app_domain       = var.external_app_domain
   publishing_service_domain = var.publishing_service_domain
-  workspace_suffix          = "govuk" # TODO: Changeme
   service_security_group_id = module.publisher_web.security_group_id
   external_cidrs_list       = var.office_cidrs_list
 }
