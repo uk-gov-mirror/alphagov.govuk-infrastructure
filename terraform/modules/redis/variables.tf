@@ -1,6 +1,5 @@
 variable "cluster_name" {
-  type    = string
-  default = "shared"
+  type = string
 }
 
 variable "internal_app_domain" {

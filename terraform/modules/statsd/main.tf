@@ -37,7 +37,7 @@ module "service_mesh_node" {
   protocol                         = "tcp"
   service_discovery_namespace_id   = var.service_discovery_namespace_id
   service_discovery_namespace_name = var.service_discovery_namespace_name
-  service_name                     = local.service_name
+  service_name                     = "${local.service_name}-${terraform.workspace}"
   source                           = "../service-mesh-node"
 }
 
@@ -82,7 +82,7 @@ module "task_definition" {
 }
 
 resource "aws_security_group" "service" {
-  name        = "fargate_${local.service_name}"
+  name        = "fargate_${local.service_name}_${terraform.workspace}"
   vpc_id      = var.vpc_id
   description = "${local.service_name} ECS Service"
 }

@@ -5,5 +5,5 @@ module "shared_redis_cluster" {
   vpc_id              = local.vpc_id
   internal_app_domain = var.internal_app_domain
   subnet_ids          = local.redis_subnets
+  cluster_name        = "shared-${terraform.workspace}"
 }
-

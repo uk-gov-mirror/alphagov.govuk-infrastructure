@@ -1,10 +1,6 @@
 resource "aws_route53_zone" "external" {
   name = "${terraform.workspace}.${data.terraform_remote_state.infra_root_dns_zones.outputs.external_root_domain_name}"
 
-  vpc {
-    vpc_id = local.vpc_id
-  }
-
   tags = {
     Repo       = "alphagov/govuk-infrastructure"
     Deployment = "govuk-publishing-platform"
