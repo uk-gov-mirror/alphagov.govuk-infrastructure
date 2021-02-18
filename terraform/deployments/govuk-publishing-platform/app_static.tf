@@ -54,6 +54,7 @@ module "static" {
   load_balancers = [{
     target_group_arn = module.static_public_alb.target_group_arn
     container_port   = 80
+    container_name   = "app"
   }]
 }
 
@@ -92,6 +93,7 @@ module "draft_static" {
   load_balancers = [{
     target_group_arn = module.draft_static_public_alb.target_group_arn
     container_port   = 80
+    container_name   = "app"
   }]
 }
 

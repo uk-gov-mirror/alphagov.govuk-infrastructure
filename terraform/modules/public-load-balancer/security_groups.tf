@@ -14,6 +14,16 @@ resource "aws_security_group_rule" "service_from_alb_http" {
   source_security_group_id = aws_security_group.public_alb.id
 }
 
+resource "aws_security_group_rule" "service_envoy_admin_from_alb_http" {
+  description              = "${var.app_name} Envoy Admin panel receives requests from its public ALB over HTTP"
+  type                     = "ingress"
+  from_port                = 9901
+  to_port                  = 9901
+  protocol                 = "tcp"
+  security_group_id        = var.service_security_group_id
+  source_security_group_id = aws_security_group.public_alb.id
+}
+
 resource "aws_security_group_rule" "alb_from_any_https" {
   description       = "${var.app_name} ALB allows requests from CIDRs list over HTTPS"
   type              = "ingress"

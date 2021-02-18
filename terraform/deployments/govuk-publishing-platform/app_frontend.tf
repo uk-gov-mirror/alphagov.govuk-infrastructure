@@ -12,6 +12,7 @@ module "frontend" {
   load_balancers = [{
     target_group_arn = module.frontend_public_alb.target_group_arn
     container_port   = 80
+    container_name   = "app"
   }]
   environment_variables = {} # TODO
   secrets_from_arns     = {} # TODO
@@ -52,6 +53,7 @@ module "draft_frontend" {
   load_balancers = [{
     target_group_arn = module.draft_frontend_public_alb.target_group_arn
     container_port   = 80
+    container_name   = "app"
   }]
   environment_variables = {} # TODO
   secrets_from_arns     = {} # TODO

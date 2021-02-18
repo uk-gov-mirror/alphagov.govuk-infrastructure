@@ -39,7 +39,7 @@ output "container_definition" {
     "environment" : [
       {
         "name" : "APPMESH_RESOURCE_ARN",
-        "value" : "arn:aws:appmesh:us-west-1:430354129336:mesh/${var.mesh_name}/virtualNode/${var.service_name}"
+        "value" : "arn:aws:appmesh:eu-west-1:430354129336:mesh/${var.mesh_name}/virtualNode/${var.service_name}"
       },
     ],
     "essential" : true,

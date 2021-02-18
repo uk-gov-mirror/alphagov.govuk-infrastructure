@@ -48,6 +48,29 @@ resource "aws_lb_listener" "public" {
   }
 }
 
+# TODO: REMOVE THIS
+resource "aws_lb_listener" "envoy_admin" {
+  load_balancer_arn = aws_lb.public.arn
+  port              = 9901
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = data.aws_acm_certificate.public_lb_default.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.envoy_admin.arn
+  }
+}
+
+resource "aws_lb_target_group" "envoy_admin" {
+  name        = "envoy-${var.app_name}-${var.workspace_suffix}"
+  port        = 9901
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+}
+
+
 data "aws_route53_zone" "public" {
   name = var.external_app_domain
 }

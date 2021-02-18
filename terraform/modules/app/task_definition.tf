@@ -50,7 +50,7 @@ module "envoy_container_definition" {
   source     = "../../modules/container-definition"
   aws_region = var.aws_region
   environment_variables = {
-    APPMESH_RESOURCE_ARN = "arn:aws:appmesh:us-west-1:${var.aws_account_id}:mesh/${var.mesh_name}/virtualNode/${var.service_name}"
+    APPMESH_RESOURCE_ARN = "arn:aws:appmesh:eu-west-1:430354129336:mesh/${var.mesh_name}/virtualNode/${var.service_name}"
   }
   # TODO: don't hardcode the version; track stable Envoy
   # TODO: control when Envoy updates happen (but still needs to be automatic)
@@ -59,7 +59,7 @@ module "envoy_container_definition" {
   log_stream_prefix = "awslogs-${var.service_name}-envoy"
   name              = "envoy"
   secrets_from_arns = var.secrets_from_arns
-  ports             = []
+  ports             = [{ "ContainerPort": 9901, "Protocol": "tcp"}]
   user              = local.user_id
 }
 

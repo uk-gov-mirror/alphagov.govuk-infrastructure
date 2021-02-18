@@ -21,7 +21,7 @@ locals {
       "environment" : [
         {
           "name" : "APPMESH_RESOURCE_ARN",
-          "value" : "arn:aws:appmesh:us-west-1:430354129336:mesh/${var.mesh_name}/virtualNode/${local.virtual_node_name}"
+          "value" : "arn:aws:appmesh:eu-west-1:430354129336:mesh/${var.mesh_name}/virtualNode/${local.virtual_node_name}"
         },
       ],
       "essential" : true,

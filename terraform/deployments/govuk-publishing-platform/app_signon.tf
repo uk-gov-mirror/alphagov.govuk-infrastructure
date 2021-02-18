@@ -38,6 +38,7 @@ module "signon" {
   load_balancers = [{
     target_group_arn = module.signon_public_alb.target_group_arn
     container_port   = 80
+    container_name   = "app"
   }]
   environment_variables = local.signon_defaults.environment_variables
   secrets_from_arns     = local.signon_defaults.secrets_from_arns

@@ -78,6 +78,11 @@ module "publisher_web" {
   load_balancers = [{
     target_group_arn = module.publisher_public_alb.target_group_arn
     container_port   = 80
+    container_name   = "app"
+  },{
+    target_group_arn = module.publisher_public_alb.envoy_target_group_arn
+    container_port   = 9901
+    container_name   = "envoy"
   }]
   command               = ["foreman", "run", "web"]
   environment_variables = local.publisher_defaults.environment_variables

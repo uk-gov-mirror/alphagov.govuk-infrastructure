@@ -32,7 +32,7 @@ resource "aws_ecs_service" "service" {
     iterator = lb
     content {
       target_group_arn = lb.value["target_group_arn"]
-      container_name   = local.container_name
+      container_name   = lb.value["container_name"]
       container_port   = lb.value["container_port"]
     }
   }
