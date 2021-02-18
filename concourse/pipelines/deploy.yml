@@ -352,6 +352,7 @@ jobs:
                 "$root_dir/old-${app}-terraform-outputs/${app}.json" \
                 "$root_dir/new-${app}-terraform-outputs/${app}.json"
               then
+                echo "old-${app}-terraform-outputs/${app}.json and new-${app}-terraform-outputs/${app}.json are identical. Skipping output."
                 # If the new terraform outputs are the same as the old ones
                 # delete them to avoid unnecessarily creating a new resource version
                 rm "$root_dir/new-${app}-terraform-outputs/${app}.json"
