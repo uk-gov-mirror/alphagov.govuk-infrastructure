@@ -204,7 +204,6 @@ groups:
       - deploy-content-store
       - deploy-frontend
       - smoke-test-content-store
-      - deploy-draft-frontend
       - deploy-publisher
       - deploy-publishing-api
       - deploy-router
@@ -224,7 +223,6 @@ groups:
   - name: frontend
     jobs:
       - deploy-frontend
-      - deploy-draft-frontend
       - smoke-test-content-store
 
   - name: publisher
