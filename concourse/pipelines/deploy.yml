@@ -119,17 +119,6 @@ resources:
     source:
       url: https://hooks.slack.com/services/((slack_webhook))
 
-  - name: govuk-terraform-outputs
-    type: s3
-    icon: file
-    # NOTE: this bucket is created for us by Big Concourse
-    # https://reliability-engineering.cloudapps.digital/continuous-deployment.html#services
-    # It's in AWS' London region (eu-west-2)
-    source:
-      bucket: ((readonly_private_bucket_name))
-      region_name: eu-west-2
-      versioned_file: govuk-terraform-outputs.json
-
   - name: content-store-terraform-outputs
     type: s3
     icon: file
@@ -308,7 +297,6 @@ jobs:
           path: old-router-terraform-outputs
           optional: true
         outputs:
-        - name: govuk-terraform-outputs
         - name: content-store-terraform-outputs
           path: new-content-store-terraform-outputs
         - name: frontend-terraform-outputs
@@ -356,8 +344,6 @@ jobs:
               -var-file ../variables/test/infrastructure.tfvars \
               -auto-approve
 
-            terraform output -json > "$root_dir/govuk-terraform-outputs/govuk-terraform-outputs.json"
-
             update_terraform_outputs() {
               app="$1"
               terraform output -json "${app}" > "$root_dir/new-${app}-terraform-outputs/${app}.json"
@@ -382,9 +368,6 @@ jobs:
             update_terraform_outputs router-api
             update_terraform_outputs router
 
-    - put: govuk-terraform-outputs
-      params:
-        file: govuk-terraform-outputs/govuk-terraform-outputs.json
     - in_parallel:
       - try:
           put: content-store-terraform-outputs
