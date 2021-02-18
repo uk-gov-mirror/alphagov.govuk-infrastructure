@@ -21,7 +21,7 @@ resources:
     icon: github
     name: govuk-infrastructure
     source: &govuk-infrastructure-source
-      branch: main
+      branch: bilbof/envoy-hacks
       uri: https://github.com/alphagov/govuk-infrastructure
     type: git
 
@@ -262,8 +262,8 @@ jobs:
     plan:
     - get: govuk-infrastructure
       trigger: true
-    - file: govuk-infrastructure/concourse/pipelines/deploy.yml
-      set_pipeline: deploy-apps-test
+    # - file: govuk-infrastructure/concourse/pipelines/deploy.yml
+    #   set_pipeline: deploy-apps-test
 
   - name: run-terraform
     serial: true

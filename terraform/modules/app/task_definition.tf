@@ -59,7 +59,7 @@ module "envoy_container_definition" {
   log_stream_prefix = "awslogs-${var.service_name}-envoy"
   name              = "envoy"
   secrets_from_arns = var.secrets_from_arns
-  ports             = [{ "ContainerPort": 9901, "Protocol": "tcp"}]
+  ports             = [9901]
   user              = local.user_id
 }
 
