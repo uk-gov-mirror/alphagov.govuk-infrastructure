@@ -50,7 +50,7 @@ module "envoy_container_definition" {
   source     = "../../modules/container-definition"
   aws_region = var.aws_region
   environment_variables = {
-    APPMESH_RESOURCE_ARN = "mesh/${var.mesh_name}/virtualNode/${var.service_name}"
+    APPMESH_RESOURCE_ARN = "arn:aws:appmesh:us-west-1:${var.aws_account_id}:mesh/${var.mesh_name}/virtualNode/${var.service_name}"
   }
   # TODO: don't hardcode the version; track stable Envoy
   # TODO: control when Envoy updates happen (but still needs to be automatic)

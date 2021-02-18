@@ -1,3 +1,8 @@
+variable "aws_account_id" {
+  type = string
+  default = "430354129336"
+}
+
 variable "mesh_name" {
   type = string
 }

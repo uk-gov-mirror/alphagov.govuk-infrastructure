@@ -37,7 +37,10 @@ output "container_definition" {
     "image" : "840364872350.dkr.ecr.${var.aws_region}.amazonaws.com/aws-appmesh-envoy:v1.16.1.0-prod",
     "user" : local.user_id,
     "environment" : [
-      { "name" : "APPMESH_RESOURCE_ARN", "value" : "mesh/${var.mesh_name}/virtualNode/${var.service_name}" },
+      {
+        "name" : "APPMESH_RESOURCE_ARN",
+        "value" : "arn:aws:appmesh:us-west-1:430354129336:mesh/${var.mesh_name}/virtualNode/${var.service_name}"
+      },
     ],
     "essential" : true,
     "logConfiguration" : {
