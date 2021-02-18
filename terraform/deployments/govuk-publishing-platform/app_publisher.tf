@@ -113,6 +113,20 @@ module "publisher_public_alb" {
   external_cidrs_list       = var.office_cidrs_list
 }
 
+module "publisher_worker_alb" {
+  source = "../../modules/public-load-balancer"
+
+  app_name                  = "publisher-worker"
+  vpc_id                    = local.vpc_id
+  dns_a_record_name         = "publisher-worker"
+  public_subnets            = local.public_subnets
+  external_app_domain       = var.external_app_domain
+  publishing_service_domain = var.publishing_service_domain
+  workspace_suffix          = "govuk" # TODO: Changeme
+  service_security_group_id = module.publisher_worker.security_group_id
+  external_cidrs_list       = var.office_cidrs_list
+}
+
 #
 # Sidekiq Worker Service
 #
@@ -126,6 +140,11 @@ module "publisher_worker" {
     aws_security_group.mesh_ecs_service.id
   ]
   environment_variables            = local.publisher_defaults.environment_variables
+  load_balancers = [{
+    target_group_arn = module.publisher_worker_alb.envoy_target_group_arn
+    container_port   = 9901
+    container_name   = "envoy"
+  }]
   mesh_name                        = aws_appmesh_mesh.govuk.id
   subnets                          = local.private_subnets
   service_discovery_namespace_id   = aws_service_discovery_private_dns_namespace.govuk_publishing_platform.id

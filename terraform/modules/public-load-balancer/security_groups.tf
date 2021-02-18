@@ -34,6 +34,16 @@ resource "aws_security_group_rule" "alb_from_any_https" {
   security_group_id = aws_security_group.public_alb.id
 }
 
+resource "aws_security_group_rule" "alb_from_any_envoy" {
+  description       = "${var.app_name} ALB allows requests from CIDRs list to 9901"
+  type              = "ingress"
+  from_port         = 9901
+  to_port           = 9901
+  protocol          = "tcp"
+  cidr_blocks       = var.external_cidrs_list
+  security_group_id = aws_security_group.public_alb.id
+}
+
 resource "aws_security_group_rule" "alb_to_any_any" {
   type      = "egress"
   protocol  = "-1"
