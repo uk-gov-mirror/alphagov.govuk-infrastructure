@@ -421,6 +421,7 @@ jobs:
       - get: release
         resource: frontend
         trigger: true
+    - in_parallel:
       - task: update-draft-task-definition
         file: govuk-infrastructure/concourse/tasks/update-task-definition-v2.yml
         output_mapping:
