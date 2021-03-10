@@ -190,8 +190,6 @@ resources:
       versioned_file: router.json
       initial_version: "0"
 
-<<<<<<< HEAD
-
   - name: frontend-image
     type: registry-image
     icon: docker
@@ -313,7 +311,11 @@ jobs:
 
               cd govuk-infrastructure/terraform/deployments/govuk-publishing-platform
 
-              terraform destroy -backend-config "role_arn=$ASSUME_ROLE_ARN"
+              terraform init -backend-config "role_arn=$ASSUME_ROLE_ARN"
+              terraform destroy  \
+              -var "assume_role_arn=$ASSUME_ROLE_ARN" \
+              -var-file ../variables/test/infrastructure.tfvars \
+              -auto-approve
 
   - name: update-pipeline
     plan:
