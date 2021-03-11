@@ -21,7 +21,7 @@ resources:
     icon: github
     name: govuk-infrastructure
     source: &govuk-infrastructure-source
-      branch: main
+      branch: work
       uri: https://github.com/alphagov/govuk-infrastructure
     type: git
 
