@@ -23,7 +23,7 @@ echo "================================================="
 jq \
   ".${VARIANT}.task_definition_cli_input_json | .containerDefinitions[0].image = \"${IMAGE}\"" \
   "app-terraform-outputs/${APPLICATION}.json" \
-  > task-definition.json
+  | tee task-definition.json
 
 aws ecs register-task-definition \
   --cli-input-json "file://task-definition.json" \
