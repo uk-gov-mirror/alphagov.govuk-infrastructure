@@ -1,9 +1,13 @@
 variable "external_app_domain" {
   type        = string
-  description = "e.g. test.govuk.digital. Domain in which to create DNS records for the app's Internet-facing load balancer."
+  description = "e.g. ecs.test.govuk.digital. Domain in which to create DNS records for the app's Internet-facing load balancer."
 }
 
-variable "certificate" {
+variable "load_balancer_certificate_arn" {
+  type = string
+}
+
+variable "cloudfront_certificate_arn" {
   type = string
 }
 
@@ -42,4 +46,18 @@ variable "public_zone_id" {
 
 variable "workspace" {
   type = string
+}
+
+variable "rails_assets_s3_regional_domain_name" {
+  type = string
+}
+
+variable "aws_region" {
+  type = string
+}
+
+variable "assume_role_arn" {
+  type        = string
+  description = "(optional) AWS IAM role to assume. Uses the role from the environment by default."
+  default     = null
 }
