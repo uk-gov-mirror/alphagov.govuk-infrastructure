@@ -13,6 +13,10 @@ plugin "workspaces" {
     attribute = "name"
   }
 
+  resource "aws_ecs_task_definition" {
+    attribute = "family"
+  }
+
   resource "aws_elasticache_replication_group" {
     attribute = "replication_group_id"
   }
