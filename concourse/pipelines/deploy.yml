@@ -483,12 +483,14 @@ jobs:
          task-definition-arn: draft-task-definition-arn
         params:
          ECS_SERVICE: draft-frontend
+         WORKSPACE: ((workspace))
       - task: update-live-ecs-service
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         input_mapping:
          task-definition-arn: live-task-definition-arn
         params:
          ECS_SERVICE: frontend
+         WORKSPACE: ((workspace))
     serial: true
     on_failure: &notify-slack-failure
       put: deploy-slack-channel
@@ -567,12 +569,14 @@ jobs:
           task-definition-arn: web-task-definition-arn
         params:
           ECS_SERVICE: publisher-web
+          WORKSPACE: ((workspace))
       - task: update-worker-ecs-service
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         input_mapping:
           task-definition-arn: worker-task-definition-arn
         params:
           ECS_SERVICE: publisher-worker
+          WORKSPACE: ((workspace))
     serial: true
     on_failure:
       <<: *notify-slack-failure
@@ -623,12 +627,14 @@ jobs:
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         params:
           ECS_SERVICE: publishing-api-web
+          WORKSPACE: ((workspace))
         input_mapping:
           task-definition-arn: web-task-definition-arn
       - task: update-worker-ecs-service
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         params:
           ECS_SERVICE: publishing-api-worker
+          WORKSPACE: ((workspace))
         input_mapping:
             task-definition-arn: worker-task-definition-arn
     serial: true
@@ -674,12 +680,14 @@ jobs:
           task-definition-arn: live-task-definition-arn
         params:
           ECS_SERVICE: content-store
+          WORKSPACE: ((workspace))
       - task: update-draft-ecs-service
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         input_mapping:
           task-definition-arn: draft-task-definition-arn
         params:
           ECS_SERVICE: draft-content-store
+          WORKSPACE: ((workspace))
     serial: true
     on_failure:
       <<: *notify-slack-failure
@@ -720,12 +728,14 @@ jobs:
           task-definition-arn: draft-task-definition-arn
         params:
           ECS_SERVICE: draft-router
+          WORKSPACE: ((workspace))
       - task: update-live-ecs-service
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         input_mapping:
           task-definition-arn: live-task-definition-arn
         params:
           ECS_SERVICE: router
+          WORKSPACE: ((workspace))
     serial: true
     on_failure:
       <<: *notify-slack-failure
@@ -766,12 +776,14 @@ jobs:
           task-definition-arn: draft-task-definition-arn
         params:
           ECS_SERVICE: draft-router-api
+          WORKSPACE: ((workspace))
       - task: update-live-ecs-service
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         input_mapping:
           task-definition-arn: live-task-definition-arn
         params:
           ECS_SERVICE: router-api
+          WORKSPACE: ((workspace))
     serial: true
     on_failure:
       <<: *notify-slack-failure
@@ -805,6 +817,7 @@ jobs:
       params:
         ECS_SERVICE: signon
         GOVUK_ENVIRONMENT: test
+        WORKSPACE: ((workspace))
     serial: true
     on_failure:
       <<: *notify-slack-failure
@@ -879,12 +892,14 @@ jobs:
           task-definition-arn: draft-task-definition-arn
         params:
           ECS_SERVICE: draft-static
+          WORKSPACE: ((workspace))
       - task: update-live-ecs-service
         file: govuk-infrastructure/concourse/tasks/update-ecs-service.yml
         input_mapping:
           task-definition-arn: live-task-definition-arn
         params:
           ECS_SERVICE: static
+          WORKSPACE: ((workspace))
     serial: true
     on_failure:
       <<: *notify-slack-failure
