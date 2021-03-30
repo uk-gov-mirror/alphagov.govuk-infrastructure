@@ -456,7 +456,7 @@ jobs:
           app-image: frontend-image
         params:
           IMAGE_ASSETS_PATH: app-image/rootfs/app/public/assets/frontend
-          S3_BUCKET_PATH: s3://govuk-test-ecs-rails-assets/assets/frontend/
+          S3_BUCKET_PATH: s3://govuk-test-((workspace))-rails-assets/assets/frontend/ # TODO - ((workspace)) interpolation won't work because we're setting default -> ecs
       - task: update-draft-task-definition
         file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
         input_mapping:
@@ -865,7 +865,7 @@ jobs:
           app-image: static-image
         params:
           IMAGE_ASSETS_PATH: app-image/rootfs/app/public/assets/static
-          S3_BUCKET_PATH: s3://govuk-test-ecs-rails-assets/assets/static/
+          S3_BUCKET_PATH: s3://govuk-test-((workspace))-rails-assets/assets/static/ # TODO - ((workspace)) interpolation won't work because we're setting default -> ecs
       - task: update-draft-task-definition
         file: govuk-infrastructure/concourse/tasks/update-task-definition.yml
         input_mapping:
