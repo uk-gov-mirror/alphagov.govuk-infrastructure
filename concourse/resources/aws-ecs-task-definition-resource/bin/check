@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+set -eu
+
+# https://concourse-ci.org/implementing-resource-types.html#resource-check
+
+# > A resource type's check script is invoked to detect new versions of the
+# > resource. It is given the configured source and current version on stdin, and
+# > must print the array of new versions, in chronological order, to stdout,
+# > including the requested version if it's still valid.
+
+# Specifically, this script should:
+#
+# 1) Parse the name of the task definition from the input given on STDIN
+# 2) Parse the current version from the task definition given on STDIN
+# 3) Find any newer versions of the task definition using the AWS CLI
+# 4) Output a list of all of the new versions
