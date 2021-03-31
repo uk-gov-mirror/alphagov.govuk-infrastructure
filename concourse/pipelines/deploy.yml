@@ -24,7 +24,7 @@ resources:
     icon: github
     name: govuk-infrastructure
     source: &govuk-infrastructure-source
-      branch: towers-pipeline
+      branch: show-and-tell
       uri: https://github.com/alphagov/govuk-infrastructure
     type: git
 
