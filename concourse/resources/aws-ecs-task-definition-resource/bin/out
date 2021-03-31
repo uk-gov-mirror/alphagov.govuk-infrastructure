@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+
+# https://concourse-ci.org/implementing-resource-types.html#resource-out
+
+# > The out script is passed a path to the directory containing the build's full
+# > set of sources as command line argument $1, and is given on stdin the
+# > configured params and the resource's source configuration.
+
+# > The script must emit the resulting version of the resource. For example, the
+# > git resource emits the SHA of the commit that it has just pushed.
+
+# > Additionally, the script may emit metadata as a list of key-value pairs. This
+# > data is intended for public consumption and will make it upstream, intended
+# > to be shown on the build's page.
+
+# Specifically, this script should:
+#
+# 1) Read the JSON task definition from the directory specified in $1
+# 2) Call aws ecs register-task-definition with the task definition as --cli-input-json
+# 3) Emit the ARN of the newly registered task definition
+#

@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+set -eu
+
+# https://concourse-ci.org/implementing-resource-types.html#resource-in
+
+# > The in script is passed a destination directory as command line argument $1,
+# > and is given on stdin the configured source and a precise version of the
+# > resource to fetch.
+#
+# > The script must fetch the resource and place it in the given directory.
+# > If the desired resource version is unavailable (for example, if it was
+# > deleted), the script must exit with error.
+#
+# > The script must emit the fetched version, and may emit metadata as a list of
+# > key-value pairs. This data is intended for public consumption and will make
+# > it upstream, intended to be shown on the build's page.
+
+# Specifically, this script should:
+#
+# 1) Write the task definition ARN to a file in the destination directory
+# 2) Emit the task definition ARN
+#
