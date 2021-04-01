@@ -6,6 +6,9 @@ output "json_format" {
     environment = [for key, value in var.environment_variables : { name : key, value : tostring(value) }],
     dependsOn   = var.dependsOn
     image       = var.image
+    linuxParameters = {
+      initProcessEnabled = true
+    }
     logConfiguration = {
       logDriver = "awslogs",
       options = {
