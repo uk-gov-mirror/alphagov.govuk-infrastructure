@@ -57,6 +57,8 @@ resource "aws_ecs_service" "service" {
   lifecycle {
     # It is essential that we ignore changes to task_definition.
     # If this is removed, the bootstrapping image will be deployed.
+    # Not possible to dynamically configure this:
+    # https://github.com/hashicorp/terraform/issues/24188#issue-569428588
     ignore_changes = [task_definition]
   }
 }
