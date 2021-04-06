@@ -28,6 +28,12 @@ variable "registry" {
   description = "registry from which to pull container images"
 }
 
+variable "image_tag" {
+  type        = string
+  default     = "latest"
+  description = "The default image tag, will be overridden after bootstrapping by deploys."
+}
+
 variable "subnets" {
   description = "IDs of the subnets where the ECS task will run."
   type        = list(any)
@@ -103,7 +109,7 @@ variable "environment_variables" {
   description = <<DESC
   A map of environment variables. For example { RAILS_ENV = "PRODUCTION", ... }
   Do not use this for secret values. Use secrets_from_arns to refer to secrets in SecretsManager instead.
-  DESC
+DESC
 }
 
 variable "secrets_from_arns" {
@@ -111,7 +117,7 @@ variable "secrets_from_arns" {
   default     = {}
   description = <<DESC
   A map of secrets to AWS SecretsManager ARNs. For example { OAUTH_SECRET = "arn:aws:secretsmanager:eu-west-1:..." } # pragma: allowlist secret
-  DESC
+DESC
 }
 variable "log_group" {
   type = string
