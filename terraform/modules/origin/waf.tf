@@ -4,7 +4,7 @@ resource "aws_wafv2_ip_set" "origin_cloudfront_ipv4_access" {
   description        = "access to ${local.live_or_draft_prefix} origin ${var.workspace} cloudfront"
   scope              = "CLOUDFRONT"
   ip_address_version = "IPV4"
-  addresses          = var.external_cidrs_list
+  addresses          = var.cidrs_allowlist
 }
 
 resource "aws_wafv2_web_acl" "origin_cloudfront_web_acl" {

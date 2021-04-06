@@ -17,11 +17,6 @@ variable "dns_a_record_name" {
   description = "DNS A Record name. Should be cluster and environment-aware."
 }
 
-variable "external_cidrs_list" {
-  type    = list(any)
-  default = ["0.0.0.0/0"]
-}
-
 variable "publishing_service_domain" {
   type        = string
   description = "e.g. test.publishing.service.gov.uk"
@@ -34,6 +29,12 @@ variable "public_subnets" {
 variable "service_security_group_id" {
   type        = string
   description = "Security group ID for the associated ECS Service."
+}
+
+variable "restricted_paths" {
+  type        = list(any)
+  description = "Paths IP restricted to GDS VPN and GOV.UK VPC"
+  default     = ["/healthcheck"]
 }
 
 variable "vpc_id" {
@@ -52,6 +53,18 @@ variable "health_check_path" {
 variable "target_port" {
   type    = number
   default = 80
+}
+
+variable "cidrs_allowlist" {
+  type        = list(any)
+  default     = ["0.0.0.0/0"]
+  description = "Allowlist for HTTPS access (not necessarily all paths)."
+}
+
+variable "unrestricted_cidrs" {
+  type        = list(any)
+  default     = ["0.0.0.0/0"]
+  description = "Endpoint allowlist for restricted_paths."
 }
 
 variable "workspace" {

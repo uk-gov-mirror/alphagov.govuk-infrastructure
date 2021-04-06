@@ -112,7 +112,8 @@ module "publisher_public_alb" {
   publishing_service_domain = var.publishing_service_domain
   workspace                 = local.workspace
   service_security_group_id = module.publisher_web.security_group_id
-  external_cidrs_list       = var.office_cidrs_list
+  cidrs_allowlist           = var.office_cidrs_list
+  unrestricted_cidrs        = concat(var.office_cidrs_list, local.vpc_public_cidr_blocks)
 }
 
 #

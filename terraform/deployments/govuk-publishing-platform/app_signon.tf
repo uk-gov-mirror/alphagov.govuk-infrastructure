@@ -70,4 +70,6 @@ module "signon_public_alb" {
   publishing_service_domain = var.publishing_service_domain
   workspace                 = local.workspace
   service_security_group_id = module.signon.security_group_id
+  unrestricted_cidrs        = concat(var.office_cidrs_list, local.vpc_public_cidr_blocks)
+  restricted_paths          = ["/healthcheck", "/api/*"]
 }
