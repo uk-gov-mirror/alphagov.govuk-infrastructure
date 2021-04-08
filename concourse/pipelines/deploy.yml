@@ -341,6 +341,7 @@ jobs:
           AWS_REGION: eu-west-1
           ASSUME_ROLE_ARN: 'arn:aws:iam::430354129336:role/govuk-concourse-deployer'
           WORKSPACE: ((workspace))
+          FASTLY_API_KEY: ((fastly_engineer_test_environment_token))
         platform: linux
         image_resource:
           type: docker-image
