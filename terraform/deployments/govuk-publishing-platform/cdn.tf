@@ -1,9 +1,15 @@
+locals {
+  create_non_default_workspace_cdn = contains(var.non_default_workspaces_enabled_cdn_list, local.workspace) ? true : false
+}
+
+
 resource "fastly_service_v1" "www_service" {
-  count = local.is_default_workspace ? 1 : 0
+  count = contains(concat(["ecs"], var.non_default_workspaces_enabled_cdn_list), local.workspace) ? 1 : 0
   name  = "www_service_${var.govuk_environment}"
 
   domain {
-    name    = "www1.ecs.${var.publishing_service_domain}" #TODO: replace www1 with www as this is for testing only
+    #TODO: replace www1 with www as this is for testing only
+    name    = local.is_default_workspace ? "www1.ecs.${var.publishing_service_domain}" : aws_route53_record.fastly_cdn_www[0].fqdn
     comment = "www CDN entry point for the ${var.govuk_environment} GOV.UK environment"
   }
 
@@ -20,4 +26,22 @@ resource "fastly_service_v1" "www_service" {
     )
     main = true
   }
+}
+
+resource "aws_route53_record" "fastly_cdn_www" {
+  count   = local.create_non_default_workspace_cdn ? 1 : 0
+  zone_id = aws_route53_zone.workspace_public.zone_id
+  name    = "www"
+  type    = "CNAME"
+  ttl     = 300
+  records = ["www-gov-uk.map.fastly.net."]
+}
+
+resource "aws_route53_record" "fastly_cdn_www_tls_validation" {
+  count   = local.create_non_default_workspace_cdn ? 1 : 0
+  zone_id = aws_route53_zone.workspace_public.zone_id
+  name    = "_acme-challenge"
+  type    = "CNAME"
+  ttl     = 300
+  records = [var.dns_validation_for_cdn[local.workspace]]
 }

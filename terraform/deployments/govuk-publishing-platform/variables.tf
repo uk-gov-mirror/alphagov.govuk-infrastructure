@@ -108,3 +108,13 @@ variable "cdn_cache_default_ttl" {
   description = "Maxmimum amount of time for which the object will be considered fresh in the cache"
   default     = 900
 }
+
+variable "non_default_workspaces_enabled_cdn_list" {
+  type        = list(any)
+  description = "non-default workspaces for which to create fastly CDN"
+}
+
+variable "dns_validation_for_cdn" {
+  type        = map(any)
+  description = "map of workspace name to cname record for fastly DNS validation"
+}

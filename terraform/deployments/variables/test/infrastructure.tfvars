@@ -4,9 +4,11 @@ govuk_aws_state_bucket = "govuk-terraform-steppingstone-test"
 
 govuk_environment = "test"
 
-publishing_service_domain = "test.publishing.service.gov.uk"
-internal_app_domain       = "test.govuk-internal.digital"
-external_app_domain       = "test.govuk.digital"
+publishing_service_domain               = "test.publishing.service.gov.uk"
+internal_app_domain                     = "test.govuk-internal.digital"
+external_app_domain                     = "test.govuk.digital"
+non_default_workspaces_enabled_cdn_list = ["fred"] # non-default workspaces for which to create fastly CDN
+dns_validation_for_cdn                  = { "fred" = "9d64074rdngsn40eoy.fastly-validations.com" }
 
 #--------------------------------------------------------------
 # Network
