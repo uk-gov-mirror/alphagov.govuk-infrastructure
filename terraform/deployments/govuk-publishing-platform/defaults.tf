@@ -1,10 +1,11 @@
 locals {
-  workspace                 = terraform.workspace == "default" ? "ecs" : terraform.workspace #default terraform workspace mapped to ecs
-  is_default_workspace      = terraform.workspace == "default" ? true : false
-  workspace_external_domain = "${local.workspace}.${var.external_app_domain}"
-  workspace_internal_domain = "${local.workspace}.${var.internal_app_domain}"
-  mesh_domain               = "mesh.${local.workspace_internal_domain}"
-  public_entry_url          = terraform.workspace == "default" ? "https://www.ecs.${var.publishing_service_domain}" : "https://${module.www_origin.fqdn}"
+  workspace                        = terraform.workspace == "default" ? "ecs" : terraform.workspace #default terraform workspace mapped to ecs
+  is_default_workspace             = terraform.workspace == "default" ? true : false
+  create_non_default_workspace_cdn = contains(var.non_default_workspaces_enabled_cdn_list, local.workspace) ? true : false
+  workspace_external_domain        = "${local.workspace}.${var.external_app_domain}"
+  workspace_internal_domain        = "${local.workspace}.${var.internal_app_domain}"
+  mesh_domain                      = "mesh.${local.workspace_internal_domain}"
+  public_entry_url                 = terraform.workspace == "default" ? "https://www.ecs.${var.publishing_service_domain}" : local.create_non_default_workspace_cdn ? aws_route53_record.fastly_cdn_www[0].fqdn : "https://${module.www_origin.origin_app_fqdn}"
   defaults = {
     environment_variables = {
       DEFAULT_TTL               = 1800,

@@ -1,7 +1,3 @@
-locals {
-  create_non_default_workspace_cdn = contains(var.non_default_workspaces_enabled_cdn_list, local.workspace) ? true : false
-}
-
 
 resource "fastly_service_v1" "www_service" {
   count = contains(concat(["ecs"], var.non_default_workspaces_enabled_cdn_list), local.workspace) ? 1 : 0
