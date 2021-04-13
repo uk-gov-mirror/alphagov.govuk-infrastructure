@@ -1,9 +1,34 @@
 locals {
-  prometheus_server_port = 9090
+  prometheus_server_port       = 9090
+  prometheus_aws_iamproxy_port = 8005
   prometheus_ecs_log_options = {
     "awslogs-create-group" : "true", # TODO: create the log group in TF so we can configure the retention policy.
+    # TODO: use this convention for naming other log groups.
     "awslogs-group" : "ecs/${terraform.workspace}/prometheus",
     "awslogs-region" : data.aws_region.current.name,
+  }
+  prometheus_config = {
+    "global" : {
+      "evaluation_interval" : "1m",
+      "scrape_interval" : "30s",
+      "scrape_timeout" : "10s"
+    },
+    "remote_write" : [
+      {
+        "url" : "http://localhost:${local.prometheus_aws_iamproxy_port}/workspaces/${aws_prometheus_workspace.prometheus.id}/api/v1/remote_write"
+      }
+    ],
+    "scrape_configs" : [
+      {
+        "job_name" : "ecs_services",
+        "file_sd_configs" : [
+          {
+            "files" : ["/etc/config/ecs-services.json"],
+            "refresh_interval" : "30s"
+          }
+        ]
+      }
+    ]
   }
 }
 
@@ -24,6 +49,8 @@ module "prometheus_public_alb" {
   publishing_service_domain = var.publishing_service_domain
   workspace                 = local.workspace
   service_security_group_id = aws_security_group.prometheus.id
+  target_port               = local.prometheus_server_port
+  health_check_path         = "/-/ready"
   external_cidrs_list       = var.office_cidrs_list
 }
 
@@ -131,7 +158,7 @@ resource "aws_ecs_task_definition" "prometheus" {
       "name" : "aws-iamproxy",
       "image" : "public.ecr.aws/aws-observability/aws-sigv4-proxy:1.0", # TODO: hardcoded version
       "essential" : true,
-      "portMappings" : [{ "containerPort" : 8080, "protocol" : "tcp" }],
+      "portMappings" : [{ "containerPort" : local.prometheus_aws_iamproxy_port }],
       "command" : [
         "--name", "aps",
         "--region", data.aws_region.current.name,
@@ -145,6 +172,24 @@ resource "aws_ecs_task_definition" "prometheus" {
       }
     }
   ])
+}
+
+# TODO: This doesn't currently support workspaces. Need to patch
+# https://github.com/aws-samples/prometheus-for-ecs/blob/main/cmd/main.go to:
+# - Take the service discovery namespace from an env var (not from SSM) and
+# - Take the name of the SSM parameter containing the Prometheus configuration
+#   from an env var.
+resource "aws_ssm_parameter" "prometheus_config" {
+  name        = "ECS-Prometheus-Configuration"
+  type        = "String"
+  description = "Contents of the prometheus.yaml config file. The prometheus-sdconfig-reloader sidecar reads this from SSM at startup and writes it to the local filesystem, where it's then read by Prometheus."
+  value       = jsonencode(local.prometheus_config)
+}
+resource "aws_ssm_parameter" "prometheus_service_discovery_namespace" {
+  name        = "ECS-ServiceDiscovery-Namespaces"
+  type        = "String"
+  description = "Tells the prometheus-sdconfig-reloader sidecar which Cloud Map namespaces to search for scrape targets. This should be a command-line flag, not an SSM parameter."
+  value       = aws_service_discovery_private_dns_namespace.govuk_publishing_platform.name
 }
 
 resource "aws_security_group" "prometheus" {
