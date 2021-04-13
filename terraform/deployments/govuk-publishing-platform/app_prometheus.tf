@@ -198,6 +198,26 @@ resource "aws_security_group" "prometheus" {
   description = "Prometheus ECS service (${terraform.workspace} TF workspace)"
 }
 
+resource "aws_security_group_rule" "prometheus_to_app_apps_any" {
+  description              = "Prometheus sends requests to all apps on any port"
+  type                     = "egress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.prometheus.id
+  source_security_group_id = aws_security_group.mesh_ecs_service.id
+}
+
+resource "aws_security_group_rule" "all_apps_from_prometheus_any" {
+  description              = "All apps accept requests from Prometheus on any port"
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 65535
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.mesh_ecs_service.id
+  source_security_group_id = aws_security_group.prometheus.id
+}
+
 resource "aws_iam_role" "prometheus_task" {
   name        = "prometheus_task_role-${terraform.workspace}"
   description = "Prometheus ECS task discovers targets, reads list of namespaces from SSM and writes metrics to AMP."
