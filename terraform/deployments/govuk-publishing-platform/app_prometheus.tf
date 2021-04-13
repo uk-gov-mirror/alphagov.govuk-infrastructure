@@ -62,7 +62,7 @@ resource "aws_ecs_service" "prometheus" {
 
   load_balancer {
     target_group_arn = module.prometheus_public_alb.target_group_arn
-    container_name   = "prometheus"
+    container_name   = "prometheus-server"
     container_port   = local.prometheus_server_port
   }
 
