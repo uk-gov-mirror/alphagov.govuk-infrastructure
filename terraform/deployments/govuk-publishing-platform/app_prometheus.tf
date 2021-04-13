@@ -67,7 +67,7 @@ resource "aws_ecs_service" "prometheus" {
   }
 
   network_configuration {
-    security_groups = [aws_security_group.prometheus.id, aws_security_group.mesh_ecs_service.id]
+    security_groups = [aws_security_group.prometheus.id]
     subnets         = local.private_subnets
   }
 
@@ -199,13 +199,23 @@ resource "aws_security_group" "prometheus" {
 }
 
 resource "aws_security_group_rule" "prometheus_to_app_apps_any" {
-  description              = "Prometheus sends requests to all apps on any port"
-  type                     = "egress"
-  from_port                = 0
-  to_port                  = 65535
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.prometheus.id
-  source_security_group_id = aws_security_group.mesh_ecs_service.id
+  description       = "Prometheus sends requests to anywhere on any port"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  security_group_id = aws_security_group.prometheus.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "prometheus_to_prometheus" {
+  description       = "Prometheus ECS tasks can monitor each other"
+  type              = "ingress"
+  from_port         = local.prometheus_server_port
+  to_port           = local.prometheus_server_port
+  protocol          = "tcp"
+  security_group_id = aws_security_group.prometheus.id
+  self              = true
 }
 
 resource "aws_security_group_rule" "all_apps_from_prometheus_any" {
