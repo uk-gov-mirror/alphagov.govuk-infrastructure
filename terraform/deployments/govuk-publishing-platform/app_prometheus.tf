@@ -160,6 +160,7 @@ resource "aws_ecs_task_definition" "prometheus" {
       "essential" : true,
       "portMappings" : [{ "containerPort" : local.prometheus_aws_iamproxy_port }],
       "command" : [
+        "--port", tostring(local.prometheus_aws_iamproxy_port),
         "--name", "aps",
         "--region", data.aws_region.current.name,
         "--host", "aps-workspaces.${data.aws_region.current.name}.amazonaws.com"
