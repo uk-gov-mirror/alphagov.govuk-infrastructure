@@ -204,9 +204,10 @@ resource "aws_security_group_rule" "prometheus_to_app_apps_any" {
   type              = "egress"
   from_port         = 0
   to_port           = 65535
-  protocol          = "tcp"
+  protocol          = "all"
   security_group_id = aws_security_group.prometheus.id
-  cidr_blocks       = ["0.0.0.0/0"]
+  # TODO: tighten this to the VPC subnets
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "prometheus_to_prometheus" {
