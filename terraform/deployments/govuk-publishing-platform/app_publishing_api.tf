@@ -17,7 +17,7 @@ locals {
         CONTENT_API_PROTOTYPE    = "yes"
         CONTENT_STORE            = local.defaults.content_store_uri
         DRAFT_CONTENT_STORE      = local.defaults.draft_content_store_uri
-        EVENT_LOG_AWS_ACCESS_ID  = "AKIAJE6VSW25CYBUMQJA" # TODO: hardcoded
+        EVENT_LOG_AWS_ACCESS_ID  = "AKIAJE6VSW25CYBUMQJA" # pragma: allowlist secret
         EVENT_LOG_AWS_BUCKETNAME = "govuk-publishing-api-event-log-test"
         EVENT_LOG_AWS_USERNAME   = "govuk-publishing-api-event-log_user"
         GOVUK_APP_NAME           = "publishing-api"
