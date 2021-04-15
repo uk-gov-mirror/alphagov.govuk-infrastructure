@@ -30,4 +30,7 @@ module "statsd" {
   subnets                          = local.private_subnets
   task_role_arn                    = aws_iam_role.task.arn
   vpc_id                           = local.vpc_id
+  splunk_url                       = local.splunk_url
+  splunk_token                     = local.splunk_token
+  splunk_index                     = "statsd"
 }

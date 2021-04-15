@@ -14,6 +14,9 @@ locals {
     )
 
     secrets_from_arns = local.defaults.secrets_from_arns
+
+    splunk_url   = local.defaults.splunk_url
+    splunk_token = local.defaults.splunk_token
   }
 }
 
@@ -46,7 +49,9 @@ module "static" {
       SECRET_KEY_BASE       = data.aws_secretsmanager_secret.static_secret_key_base.arn,
     },
   )
-  log_group          = local.log_group
+  splunk_url         = local.static_defaults.splunk_url
+  splunk_token       = local.static_defaults.splunk_token
+  splunk_index       = local.log_group
   aws_region         = data.aws_region.current.name
   cpu                = local.static_defaults.cpu
   memory             = local.static_defaults.memory
@@ -83,7 +88,9 @@ module "draft_static" {
       SECRET_KEY_BASE       = data.aws_secretsmanager_secret.draft_static_secret_key_base.arn,
     },
   )
-  log_group          = local.log_group
+  splunk_url         = local.static_defaults.splunk_url
+  splunk_token       = local.static_defaults.splunk_token
+  splunk_index       = local.log_group
   aws_region         = data.aws_region.current.name
   cpu                = local.static_defaults.cpu
   memory             = local.static_defaults.memory

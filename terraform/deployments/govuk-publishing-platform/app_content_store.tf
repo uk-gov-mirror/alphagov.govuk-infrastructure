@@ -36,6 +36,9 @@ locals {
       data.terraform_remote_state.govuk_aws_mongo.outputs.mongo_2_service_dns_name,
       data.terraform_remote_state.govuk_aws_mongo.outputs.mongo_3_service_dns_name,
     )
+
+    splunk_url   = local.defaults.splunk_url
+    splunk_token = local.defaults.splunk_token
   }
 }
 
@@ -68,7 +71,9 @@ module "content_store" {
     },
   )
   secrets_from_arns  = local.content_store_defaults.secrets_from_arns
-  log_group          = local.log_group
+  splunk_url         = local.content_store_defaults.splunk_url
+  splunk_token       = local.content_store_defaults.splunk_token
+  splunk_index       = local.log_group
   aws_region         = data.aws_region.current.name
   cpu                = local.content_store_defaults.cpu
   memory             = local.content_store_defaults.memory
@@ -107,7 +112,9 @@ module "draft_content_store" {
     }
   )
   secrets_from_arns  = local.content_store_defaults.secrets_from_arns
-  log_group          = local.log_group
+  splunk_url         = local.content_store_defaults.splunk_url
+  splunk_token       = local.content_store_defaults.splunk_token
+  splunk_index       = local.log_group
   aws_region         = data.aws_region.current.name
   cpu                = local.content_store_defaults.cpu
   memory             = local.content_store_defaults.memory

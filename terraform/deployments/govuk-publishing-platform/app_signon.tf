@@ -26,6 +26,9 @@ locals {
         DEVISE_SECRET_KEY = data.aws_secretsmanager_secret.signon_devise_secret_key.arn
       }
     )
+
+    splunk_url   = local.defaults.splunk_url
+    splunk_token = local.defaults.splunk_token
   }
 }
 
@@ -49,7 +52,9 @@ module "signon" {
   }]
   environment_variables = local.signon_defaults.environment_variables
   secrets_from_arns     = local.signon_defaults.secrets_from_arns
-  log_group             = local.log_group
+  splunk_url            = local.signon_defaults.splunk_url
+  splunk_token          = local.signon_defaults.splunk_token
+  splunk_index          = local.log_group
   aws_region            = data.aws_region.current.name
   cpu                   = 512
   memory                = 1024

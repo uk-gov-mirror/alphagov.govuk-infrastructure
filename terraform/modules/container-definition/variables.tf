@@ -35,13 +35,21 @@ variable "image" {
   default = null
 }
 
-variable "log_group" {
+variable "splunk_index" {
   type = string
 }
 
-variable "log_stream_prefix" {
-  type        = string
-  description = "Set log_stream_prefix to an ECS Service name, if applicable. A prefix makes it easier to associate a log with a service."
+variable "splunk_sourcetype" {
+  type    = string
+  default = null
+}
+
+variable "splunk_token" {
+  type = string
+}
+
+variable "splunk_url" {
+  type = string
 }
 
 variable "name" {

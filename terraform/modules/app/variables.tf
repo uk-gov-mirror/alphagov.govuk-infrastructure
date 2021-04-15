@@ -33,7 +33,6 @@ variable "subnets" {
   type        = list(any)
 }
 
-
 variable "service_mesh" {
   description = "Determines if app will be added to service mesh"
   type        = bool
@@ -113,8 +112,18 @@ variable "secrets_from_arns" {
   A map of secrets to AWS SecretsManager ARNs. For example { OAUTH_SECRET = "arn:aws:secretsmanager:eu-west-1:..." } # pragma: allowlist secret
   DESC
 }
-variable "log_group" {
+variable "splunk_url" {
   type = string
+}
+variable "splunk_token" {
+  type = string
+}
+variable "splunk_index" {
+  type = string
+}
+variable "splunk_sourcetype" {
+  type    = string
+  default = null
 }
 variable "aws_region" {
   type = string

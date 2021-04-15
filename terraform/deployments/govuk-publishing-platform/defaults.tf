@@ -40,5 +40,9 @@ locals {
     virtual_service_backends = [
       module.statsd.virtual_service_names[0]
     ]
+    splunk_url   = data.aws_secretsmanager_secret.splunk_url.arn
+    splunk_token = data.aws_secretsmanager_secret.splunk_token.arn
   }
+  splunk_url   = data.aws_secretsmanager_secret.splunk_url.arn
+  splunk_token = data.aws_secretsmanager_secret.splunk_token.arn
 }

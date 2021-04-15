@@ -41,14 +41,14 @@ output "container_definition" {
     ],
     "essential" : true,
     "logConfiguration" : {
-      "logDriver" : "awslogs",
+      "logDriver" : "splunk",
       "options" : {
-        "awslogs-create-group" : "true",
-        "awslogs-group" : var.log_group,
-        "awslogs-region" : var.aws_region,
-        "awslogs-stream-prefix" : "awslogs-${var.service_name}-envoy"
+        "splunk-url" : var.splunk_url,
+        "splunk-token" : var.splunk_token,
+        "splunk-sourcetype" : "request",
+        "splunk-index" : "${var.service_name}-envoy"
       }
-    }
+    },
   }
 }
 
