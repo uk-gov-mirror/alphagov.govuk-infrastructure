@@ -341,7 +341,6 @@ jobs:
         trigger: true
       - get: everyday-at-6am
         trigger: true
-        optional: true
       - get: content-store-terraform-outputs
       - get: publisher-terraform-outputs
       - get: publishing-api-terraform-outputs
@@ -354,6 +353,8 @@ jobs:
     - task: terraform-apply
       config:
         inputs:
+        - name: everyday-at-6am
+          optional: true
         - name: govuk-infrastructure
         - name: content-store-terraform-outputs
           path: old-content-store-terraform-outputs
