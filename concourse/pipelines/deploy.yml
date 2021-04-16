@@ -339,8 +339,6 @@ jobs:
         passed:
         - update-pipeline
         trigger: true
-      - get: everyday-at-6am
-        trigger: true
       - get: content-store-terraform-outputs
       - get: publisher-terraform-outputs
       - get: publishing-api-terraform-outputs
