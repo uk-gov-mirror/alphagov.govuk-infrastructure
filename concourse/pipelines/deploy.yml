@@ -218,12 +218,6 @@ resources:
       expression: "0 23 * * 1-5"
       location: "Europe/London"
 
-  - name: everyday-at-6am
-    type: cron-resource
-    source:
-      expression: "0 06 * * 1-5"
-      location: "Europe/London"
-
 groups:
   - name: all
     jobs:
@@ -339,8 +333,6 @@ jobs:
         passed:
         - update-pipeline
         trigger: true
-      - get: everyday-at-6am
-        trigger: true
       - get: content-store-terraform-outputs
       - get: publisher-terraform-outputs
       - get: publishing-api-terraform-outputs
@@ -353,8 +345,6 @@ jobs:
     - task: terraform-apply
       config:
         inputs:
-        - name: everyday-at-6am
-          optional: true
         - name: govuk-infrastructure
         - name: content-store-terraform-outputs
           path: old-content-store-terraform-outputs
