@@ -2,9 +2,8 @@ locals {
   prometheus_server_port       = 9090
   prometheus_aws_iamproxy_port = 8005
   prometheus_ecs_log_options = {
-    "awslogs-create-group" : "true", # TODO: create the log group in TF so we can configure the retention policy.
-    # TODO: use this convention for naming other log groups.
-    "awslogs-group" : "ecs/${terraform.workspace}/prometheus",
+    "awslogs-create-group" : "true",                   # TODO: create the log group in TF so we can configure the retention policy.
+    "awslogs-group" : "${local.log_group}/prometheus", # TODO: other apps are all mixed into the same group; do we want that?
     "awslogs-region" : data.aws_region.current.name,
   }
   prometheus_config = {
