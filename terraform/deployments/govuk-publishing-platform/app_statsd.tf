@@ -18,7 +18,6 @@ module "statsd" {
   execution_role_arn               = aws_iam_role.execution.arn
   extra_security_groups            = [local.govuk_management_access_security_group, aws_security_group.mesh_ecs_service.id]
   image_name                       = "statsd:test-0.1.3" # TODO: hardcoded image tag
-  log_group                        = local.log_group
   memory                           = local.statsd_defaults.memory
   mesh_name                        = aws_appmesh_mesh.govuk.id
   registry                         = "govuk"

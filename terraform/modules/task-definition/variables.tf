@@ -32,13 +32,13 @@ variable "task_role_arn" {
   type = string
 }
 
-variable "splunk_url" {
-  type = string
-}
+# variable "splunk_url" {
+#   type = string
+# }
 
-variable "splunk_token" {
-  type = string
-}
+# variable "splunk_token" {
+#   type = string
+# }
 
 # variable "splunk_index" {
 #   type = string
