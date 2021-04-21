@@ -39,3 +39,12 @@ data "terraform_remote_state" "infra_security_groups" {
 }
 
 data "fastly_ip_ranges" "fastly" {}
+
+data "aws_nat_gateway" "govuk" {
+  count     = length(local.public_subnets)
+  subnet_id = local.public_subnets[count.index]
+}
+
+locals {
+  aws_nat_gateways_cidrs = [for nat_gateway in data.aws_nat_gateway.govuk : "${nat_gateway.public_ip}/32"]
+}

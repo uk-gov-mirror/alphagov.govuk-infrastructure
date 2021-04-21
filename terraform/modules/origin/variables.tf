@@ -1,3 +1,19 @@
+variable "name" {
+  type        = string
+  description = "name of the origin"
+}
+
+variable "subdomain" {
+  type        = string
+  description = "subdomain of origin"
+}
+
+variable "extra_aliases" {
+  type        = list(any)
+  default     = []
+  description = "List of additional domains that the CloudFront Distribution will accept"
+}
+
 variable "external_app_domain" {
   type        = string
   description = "e.g. ecs.test.govuk.digital. Domain in which to create DNS records for the app's Internet-facing load balancer."
@@ -11,15 +27,9 @@ variable "cloudfront_certificate_arn" {
   type = string
 }
 
-variable "is_live" {
-  description = "Determines whether the origin is a live or a draft one"
-  type        = bool
-  default     = true
-}
-
-variable "apps_security_config_list" {
+variable "fronted_apps" {
   type        = map(any)
-  description = "map in the format {<app_name> = { security_group_id=<security_group_id>, target_port=<target_port>}}"
+  description = "map of apps fronted by the CloudFront + ALB. The format {<app_name> = { security_group_id=<security_group_id>,}}"
 }
 
 variable "external_cidrs_list" {

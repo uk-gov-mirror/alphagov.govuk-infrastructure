@@ -44,7 +44,7 @@ module "signon" {
   desired_count                    = var.signon_desired_count
   extra_security_groups            = [local.govuk_management_access_security_group, aws_security_group.mesh_ecs_service.id]
   load_balancers = [{
-    target_group_arn = module.signon_public_alb.target_group_arn
+    target_group_arn = aws_lb_target_group.signon.arn
     container_port   = 80
   }]
   environment_variables = local.signon_defaults.environment_variables
@@ -55,19 +55,4 @@ module "signon" {
   memory                = 1024
   task_role_arn         = aws_iam_role.task.arn
   execution_role_arn    = aws_iam_role.execution.arn
-}
-
-module "signon_public_alb" {
-  source = "../../modules/public-load-balancer"
-
-  app_name                  = "signon"
-  vpc_id                    = local.vpc_id
-  public_zone_id            = aws_route53_zone.workspace_public.zone_id
-  dns_a_record_name         = "signon"
-  public_subnets            = local.public_subnets
-  external_app_domain       = local.workspace_external_domain
-  certificate               = aws_acm_certificate_validation.workspace_public.certificate_arn
-  publishing_service_domain = var.publishing_service_domain
-  workspace                 = local.workspace
-  service_security_group_id = module.signon.security_group_id
 }

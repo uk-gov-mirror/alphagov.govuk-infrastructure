@@ -17,7 +17,7 @@ locals {
         PLEK_SERVICE_PUBLISHING_API_URI = local.defaults.publishing_api_uri
         PLEK_SERVICE_SIGNON_URI         = local.defaults.signon_uri
         UNICORN_WORKER_PROCESSES        = 12,
-        ASSET_HOST                      = local.defaults.assets_www_origin,
+        ASSET_HOST                      = local.defaults.assets_www_frontends_origin,
         PLEK_SERVICE_CONTENT_STORE_URI  = local.defaults.content_store_uri
         PLEK_SERVICE_STATIC_URI         = local.defaults.static_uri
         GOVUK_ASSET_ROOT                = local.defaults.asset_root_url
@@ -59,7 +59,7 @@ module "frontend" {
   subnets                          = local.private_subnets
   extra_security_groups            = [local.govuk_management_access_security_group, aws_security_group.mesh_ecs_service.id]
   load_balancers = [{
-    target_group_arn = module.www_origin.frontend_target_group_arn
+    target_group_arn = aws_lb_target_group.frontend.arn
     container_port   = 80
   }]
   environment_variables = local.frontend_defaults.environment_variables
@@ -90,13 +90,13 @@ module "draft_frontend" {
   subnets                          = local.private_subnets
   extra_security_groups            = [local.govuk_management_access_security_group, aws_security_group.mesh_ecs_service.id]
   load_balancers = [{
-    target_group_arn = module.draft_origin.frontend_target_group_arn
+    target_group_arn = aws_lb_target_group.draft_frontend.arn
     container_port   = 80
   }]
   environment_variables = merge(
     local.frontend_defaults.environment_variables,
     {
-      ASSET_HOST                     = local.defaults.assets_draft_origin,
+      ASSET_HOST                     = local.defaults.assets_draft_frontends_origin,
       PLEK_SERVICE_CONTENT_STORE_URI = local.defaults.draft_content_store_uri,
       PLEK_SERVICE_STATIC_URI        = local.defaults.draft_static_uri
     }
