@@ -9,7 +9,7 @@ locals {
   prometheus_config = {
     "global" : {
       "evaluation_interval" : "1m",
-      "scrape_interval" : "30s",
+      "scrape_interval" : "1m",
       "scrape_timeout" : "10s"
     },
     "remote_write" : [
