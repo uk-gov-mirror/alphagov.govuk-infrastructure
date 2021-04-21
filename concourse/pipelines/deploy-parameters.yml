@@ -1,2 +1,2 @@
-workspace: default
-govuk_infrastructure_branch: main
+workspace: fred
+govuk_infrastructure_branch: add_backends_origin
