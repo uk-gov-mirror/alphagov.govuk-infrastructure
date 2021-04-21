@@ -19,12 +19,28 @@ locals {
     ],
     "scrape_configs" : [
       {
-        "job_name" : "ecs_services",
+        "job_name" : "appmesh-envoy",
         "file_sd_configs" : [
           {
             "files" : ["/etc/config/ecs-services.json"],
             "refresh_interval" : "30s"
           }
+        ],
+        "relabel_configs" : [
+          {
+            "source_labels" : ["__address__"],
+            "regex" : "(.*):.*",
+            "replacement" : "$1:9901", # TODO: define this port number in one authoritative place.
+            "target_label" : "__address__"
+          },
+          # TODO: Remove this workaround once we've got rid of prometheus-sdconfig-reloader.
+          # We should just be able to set metrics_path normally, but because
+          # prometheus-sdconfig-reloader sets __metrics_path__ on every target
+          # for some reason, we have to override it by relabelling.
+          {
+            "replacement" : "/stats/prometheus",
+            "target_label" : "__metrics_path__"
+          },
         ]
       }
     ]
@@ -130,6 +146,7 @@ resource "aws_ecs_task_definition" "prometheus" {
       },
       "portMappings" : [{ "containerPort" : local.prometheus_server_port }]
     },
+    # TODO: replace awsvijisarathy/prometheus-sdconfig-reloader with aws-cloudmap-prometheus-sd (already in our ECR at 172025368201.dkr.ecr.eu-west-1.amazonaws.com/awslabs/aws-cloudmap-prometheus-sd) and a shell command to copy the config from S3 at startup.
     {
       "name" : "config-reloader",
       "image" : "public.ecr.aws/awsvijisarathy/prometheus-sdconfig-reloader:1.0", # TODO: hardcoded version
