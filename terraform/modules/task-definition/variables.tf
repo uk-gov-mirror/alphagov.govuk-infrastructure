@@ -31,20 +31,3 @@ variable "proxy_configuration" {
 variable "task_role_arn" {
   type = string
 }
-
-# variable "splunk_url" {
-#   type = string
-# }
-
-# variable "splunk_token" {
-#   type = string
-# }
-
-# variable "splunk_index" {
-#   type = string
-# }
-
-# variable "splunk_sourcetype" {
-#   type    = string
-#   default = null
-# }
