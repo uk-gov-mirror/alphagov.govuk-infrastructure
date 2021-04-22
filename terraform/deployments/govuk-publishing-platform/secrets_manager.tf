@@ -12,12 +12,6 @@ data "aws_secretsmanager_secret" "splunk_url" {
 data "aws_secretsmanager_secret" "splunk_token" {
   name = "SPLUNK_TOKEN"
 }
-data "aws_secretsmanager_secret_version" "splunk_url" {
-  secret_id = data.aws_secretsmanager_secret.splunk_url.id
-}
-data "aws_secretsmanager_secret_version" "splunk_token" {
-  secret_id = data.aws_secretsmanager_secret.splunk_token.id
-}
 
 # Frontend app secrets
 
