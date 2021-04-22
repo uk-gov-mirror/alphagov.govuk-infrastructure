@@ -79,7 +79,7 @@ resource "aws_lb_target_group" "signon" {
   target_type = "ip"
 
   health_check {
-    path = "/"
+    path = "/healthcheck"
   }
 }
 
