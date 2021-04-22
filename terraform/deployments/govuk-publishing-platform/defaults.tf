@@ -40,9 +40,15 @@ locals {
     virtual_service_backends = [
       module.statsd.virtual_service_names[0]
     ]
+    # splunk_url   = data.aws_secretsmanager_secret_version.splunk_url.secret_string
+    # splunk_token = data.aws_secretsmanager_secret_version.splunk_token.secret_string
     splunk_url   = data.aws_secretsmanager_secret.splunk_url.arn
     splunk_token = data.aws_secretsmanager_secret.splunk_token.arn
+    splunk_index = "govuk_replatforming"
   }
+  # splunk_url   = data.aws_secretsmanager_secret_version.splunk_url.secret_string
+  # splunk_token = data.aws_secretsmanager_secret_version.splunk_token.secret_string
   splunk_url   = data.aws_secretsmanager_secret.splunk_url.arn
   splunk_token = data.aws_secretsmanager_secret.splunk_token.arn
+  splunk_index = "govuk_replatforming"
 }

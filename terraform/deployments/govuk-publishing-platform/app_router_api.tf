@@ -28,6 +28,7 @@ locals {
 
     splunk_url   = local.defaults.splunk_url
     splunk_token = local.defaults.splunk_token
+    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -62,7 +63,7 @@ module "router_api" {
   )
   splunk_url         = local.router_api_defaults.splunk_url
   splunk_token       = local.router_api_defaults.splunk_token
-  splunk_index       = local.log_group
+  splunk_index       = local.router_api_defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.router_api_defaults.cpu
   memory             = local.router_api_defaults.memory
@@ -101,7 +102,7 @@ module "draft_router_api" {
   )
   splunk_url         = local.router_api_defaults.splunk_url
   splunk_token       = local.router_api_defaults.splunk_token
-  splunk_index       = local.log_group
+  splunk_index       = local.router_api_defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.router_api_defaults.cpu
   memory             = local.router_api_defaults.memory

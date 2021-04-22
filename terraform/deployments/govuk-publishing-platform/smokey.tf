@@ -20,7 +20,7 @@ module "smokey_container_definition" {
   }
   splunk_url   = data.aws_secretsmanager_secret.splunk_url.arn
   splunk_token = data.aws_secretsmanager_secret.splunk_token.arn
-  splunk_index = "smokey"
+  splunk_index = "govuk_replatforming"
   secrets_from_arns = {
     AUTH_USERNAME = data.aws_secretsmanager_secret.smokey_auth_username.arn
     AUTH_PASSWORD = data.aws_secretsmanager_secret.smokey_auth_password.arn

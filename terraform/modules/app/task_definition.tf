@@ -42,7 +42,7 @@ module "app_container_definition" {
   splunk_url            = var.splunk_url
   splunk_token          = var.splunk_token
   splunk_sourcetype     = "app"
-  splunk_index          = var.service_name
+  splunk_index          = var.splunk_index
   name                  = "app"
   ports                 = var.ports
   secrets_from_arns     = var.secrets_from_arns
@@ -64,7 +64,7 @@ module "envoy_container_definition" {
   splunk_url        = var.splunk_url
   splunk_token      = var.splunk_token
   splunk_sourcetype = "app"
-  splunk_index      = var.service_name
+  splunk_index      = var.splunk_index
   name              = "envoy"
   secrets_from_arns = {}
   ports             = []

@@ -41,6 +41,7 @@ locals {
 
     splunk_url   = local.defaults.splunk_url
     splunk_token = local.defaults.splunk_token
+    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -69,7 +70,7 @@ module "frontend" {
   secrets_from_arns     = local.frontend_defaults.secrets_from_arns
   splunk_url            = local.frontend_defaults.splunk_url
   splunk_token          = local.frontend_defaults.splunk_token
-  splunk_index          = local.log_group
+  splunk_index          = local.frontend_defaults.splunk_index
   aws_region            = data.aws_region.current.name
   cpu                   = local.frontend_defaults.cpu
   memory                = local.frontend_defaults.memory
@@ -109,7 +110,7 @@ module "draft_frontend" {
   secrets_from_arns  = local.frontend_defaults.secrets_from_arns
   splunk_url         = local.frontend_defaults.splunk_url
   splunk_token       = local.frontend_defaults.splunk_token
-  splunk_index       = local.log_group
+  splunk_index       = local.frontend_defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.frontend_defaults.cpu
   memory             = local.frontend_defaults.memory

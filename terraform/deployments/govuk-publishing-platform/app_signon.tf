@@ -29,6 +29,7 @@ locals {
 
     splunk_url   = local.defaults.splunk_url
     splunk_token = local.defaults.splunk_token
+    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -54,7 +55,7 @@ module "signon" {
   secrets_from_arns     = local.signon_defaults.secrets_from_arns
   splunk_url            = local.signon_defaults.splunk_url
   splunk_token          = local.signon_defaults.splunk_token
-  splunk_index          = local.log_group
+  splunk_index          = local.signon_defaults.splunk_index
   aws_region            = data.aws_region.current.name
   cpu                   = 512
   memory                = 1024

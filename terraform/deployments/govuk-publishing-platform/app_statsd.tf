@@ -31,5 +31,5 @@ module "statsd" {
   vpc_id                           = local.vpc_id
   splunk_url                       = local.splunk_url
   splunk_token                     = local.splunk_token
-  splunk_index                     = "statsd"
+  splunk_index                     = local.splunk_index
 }

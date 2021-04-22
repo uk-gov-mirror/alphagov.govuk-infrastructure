@@ -63,6 +63,7 @@ locals {
 
     splunk_url   = local.defaults.splunk_url
     splunk_token = local.defaults.splunk_token
+    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -92,7 +93,7 @@ module "publisher_web" {
   secrets_from_arns     = local.publisher_defaults.secrets_from_arns
   splunk_url            = local.publisher_defaults.splunk_url
   splunk_token          = local.publisher_defaults.splunk_token
-  splunk_index          = local.log_group
+  splunk_index          = local.publisher_defaults.splunk_index
   aws_region            = data.aws_region.current.name
   cpu                   = local.publisher_defaults.cpu
   memory                = local.publisher_defaults.memory
@@ -144,7 +145,7 @@ module "publisher_worker" {
   secrets_from_arns                = local.publisher_defaults.secrets_from_arns
   splunk_url                       = local.publisher_defaults.splunk_url
   splunk_token                     = local.publisher_defaults.splunk_token
-  splunk_index                     = local.log_group
+  splunk_index                     = local.publisher_defaults.splunk_index
   aws_region                       = data.aws_region.current.name
   cpu                              = local.publisher_defaults.cpu
   memory                           = local.publisher_defaults.memory

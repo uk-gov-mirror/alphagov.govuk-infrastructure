@@ -17,6 +17,7 @@ locals {
 
     splunk_url   = local.defaults.splunk_url
     splunk_token = local.defaults.splunk_token
+    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -51,7 +52,7 @@ module "static" {
   )
   splunk_url         = local.static_defaults.splunk_url
   splunk_token       = local.static_defaults.splunk_token
-  splunk_index       = local.log_group
+  splunk_index       = local.static_defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.static_defaults.cpu
   memory             = local.static_defaults.memory
@@ -90,7 +91,7 @@ module "draft_static" {
   )
   splunk_url         = local.static_defaults.splunk_url
   splunk_token       = local.static_defaults.splunk_token
-  splunk_index       = local.log_group
+  splunk_index       = local.static_defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.static_defaults.cpu
   memory             = local.static_defaults.memory

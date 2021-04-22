@@ -14,9 +14,17 @@ output "json_format" {
     }
     logConfiguration = {
       logDriver = "splunk",
+      secretOptions = [
+        {
+          name      = "splunk-token",
+          valueFrom = var.splunk_token
+        },
+        {
+          name      = "splunk-url",
+          valueFrom = var.splunk_url
+        },
+      ]
       options = {
-        splunk-url        = var.splunk_url,
-        splunk-token      = var.splunk_token,
         splunk-sourcetype = var.splunk_sourcetype,
         splunk-index      = var.splunk_index,
       }
