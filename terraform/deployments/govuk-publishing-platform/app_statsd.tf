@@ -5,6 +5,10 @@ locals {
     memory                = 2048 # TODO parameterize this
     environment_variables = local.defaults.environment_variables
     secrets_from_arns     = local.defaults.secrets_from_arns
+
+    splunk_url   = local.defaults.splunk_url
+    splunk_token = local.defaults.splunk_token
+    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -29,7 +33,7 @@ module "statsd" {
   subnets                          = local.private_subnets
   task_role_arn                    = aws_iam_role.task.arn
   vpc_id                           = local.vpc_id
-  splunk_url                       = local.splunk_url
-  splunk_token                     = local.splunk_token
-  splunk_index                     = local.splunk_index
+  splunk_url                       = local.statsd_defaults.splunk_url
+  splunk_token                     = local.statsd_defaults.splunk_token
+  splunk_index                     = local.statsd_defaults.splunk_index
 }

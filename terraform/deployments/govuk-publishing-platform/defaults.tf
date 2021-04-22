@@ -44,7 +44,4 @@ locals {
     splunk_token = data.aws_secretsmanager_secret.splunk_token.arn
     splunk_index = "govuk_replatforming"
   }
-  splunk_url   = data.aws_secretsmanager_secret.splunk_url.arn
-  splunk_token = data.aws_secretsmanager_secret.splunk_token.arn
-  splunk_index = "govuk_replatforming"
 }
