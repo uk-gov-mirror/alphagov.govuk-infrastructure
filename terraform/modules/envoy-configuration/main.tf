@@ -43,11 +43,19 @@ output "container_definition" {
     "logConfiguration" : {
       "logDriver" : "splunk",
       "options" : {
-        "splunk-url" : var.splunk_url,
-        "splunk-token" : var.splunk_token,
         "splunk-sourcetype" : "request",
         "splunk-index" : "${var.service_name}-envoy"
-      }
+      },
+      "secretOptions" : [
+        {
+          "name"      = "splunk-token",
+          "valueFrom" = var.splunk_token
+        },
+        {
+          "name"      = "splunk-url",
+          "valueFrom" = var.splunk_url
+        },
+      ]
     },
   }
 }

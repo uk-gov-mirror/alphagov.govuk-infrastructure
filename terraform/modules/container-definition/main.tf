@@ -14,6 +14,10 @@ output "json_format" {
     }
     logConfiguration = {
       logDriver = "splunk",
+      options = {
+        splunk-sourcetype = var.splunk_sourcetype,
+        splunk-index      = var.splunk_index,
+      }
       secretOptions = [
         {
           name      = "splunk-token",
@@ -23,11 +27,7 @@ output "json_format" {
           name      = "splunk-url",
           valueFrom = var.splunk_url
         },
-      ]
-      options = {
-        splunk-sourcetype = var.splunk_sourcetype,
-        splunk-index      = var.splunk_index,
-      }
+      ],
     },
     mountPoints  = [],
     portMappings = [for port in var.ports : { containerPort = port, hostPort = port, protocol = "tcp" }],
