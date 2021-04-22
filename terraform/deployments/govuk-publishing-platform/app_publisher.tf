@@ -60,10 +60,6 @@ locals {
         SECRET_KEY_BASE             = data.aws_secretsmanager_secret.publisher_secret_key_base.arn,
       }
     )
-
-    splunk_url   = local.defaults.splunk_url
-    splunk_token = local.defaults.splunk_token
-    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -91,9 +87,9 @@ module "publisher_web" {
   command               = ["foreman", "run", "web"]
   environment_variables = local.publisher_defaults.environment_variables
   secrets_from_arns     = local.publisher_defaults.secrets_from_arns
-  splunk_url            = local.publisher_defaults.splunk_url
-  splunk_token          = local.publisher_defaults.splunk_token
-  splunk_index          = local.publisher_defaults.splunk_index
+  splunk_url            = local.defaults.splunk_url
+  splunk_token          = local.defaults.splunk_token
+  splunk_index          = local.defaults.splunk_index
   aws_region            = data.aws_region.current.name
   cpu                   = local.publisher_defaults.cpu
   memory                = local.publisher_defaults.memory
@@ -143,9 +139,9 @@ module "publisher_worker" {
   service_discovery_namespace_name = aws_service_discovery_private_dns_namespace.govuk_publishing_platform.name
   source                           = "../../modules/app"
   secrets_from_arns                = local.publisher_defaults.secrets_from_arns
-  splunk_url                       = local.publisher_defaults.splunk_url
-  splunk_token                     = local.publisher_defaults.splunk_token
-  splunk_index                     = local.publisher_defaults.splunk_index
+  splunk_url                       = local.defaults.splunk_url
+  splunk_token                     = local.defaults.splunk_token
+  splunk_index                     = local.defaults.splunk_index
   aws_region                       = data.aws_region.current.name
   cpu                              = local.publisher_defaults.cpu
   memory                           = local.publisher_defaults.memory

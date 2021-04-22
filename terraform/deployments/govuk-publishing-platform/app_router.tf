@@ -24,10 +24,6 @@ locals {
       data.terraform_remote_state.govuk_aws_router_mongo.outputs.router_backend_2_service_dns_name,
       data.terraform_remote_state.govuk_aws_router_mongo.outputs.router_backend_3_service_dns_name,
     )
-
-    splunk_url   = local.defaults.splunk_url
-    splunk_token = local.defaults.splunk_token
-    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -89,9 +85,9 @@ module "router" {
     },
   )
   secrets_from_arns  = local.router_defaults.secrets_from_arns
-  splunk_url         = local.router_defaults.splunk_url
-  splunk_token       = local.router_defaults.splunk_token
-  splunk_index       = local.router_defaults.splunk_index
+  splunk_url         = local.defaults.splunk_url
+  splunk_token       = local.defaults.splunk_token
+  splunk_index       = local.defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.router_defaults.cpu
   memory             = local.router_defaults.memory
@@ -156,9 +152,9 @@ module "draft_router" {
     },
   )
   secrets_from_arns  = local.router_defaults.secrets_from_arns
-  splunk_url         = local.router_defaults.splunk_url
-  splunk_token       = local.router_defaults.splunk_token
-  splunk_index       = local.router_defaults.splunk_index
+  splunk_url         = local.defaults.splunk_url
+  splunk_token       = local.defaults.splunk_token
+  splunk_index       = local.defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.router_defaults.cpu
   memory             = local.router_defaults.memory

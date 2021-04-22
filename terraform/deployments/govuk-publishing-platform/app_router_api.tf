@@ -25,10 +25,6 @@ locals {
       data.terraform_remote_state.govuk_aws_router_mongo.outputs.router_backend_2_service_dns_name,
       data.terraform_remote_state.govuk_aws_router_mongo.outputs.router_backend_3_service_dns_name,
     )
-
-    splunk_url   = local.defaults.splunk_url
-    splunk_token = local.defaults.splunk_token
-    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -61,9 +57,9 @@ module "router_api" {
       SECRET_KEY_BASE      = data.aws_secretsmanager_secret.router_api_secret_key_base.arn,
     },
   )
-  splunk_url         = local.router_api_defaults.splunk_url
-  splunk_token       = local.router_api_defaults.splunk_token
-  splunk_index       = local.router_api_defaults.splunk_index
+  splunk_url         = local.defaults.splunk_url
+  splunk_token       = local.defaults.splunk_token
+  splunk_index       = local.defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.router_api_defaults.cpu
   memory             = local.router_api_defaults.memory
@@ -100,9 +96,9 @@ module "draft_router_api" {
       SECRET_KEY_BASE      = data.aws_secretsmanager_secret.draft_router_api_secret_key_base.arn,
     },
   )
-  splunk_url         = local.router_api_defaults.splunk_url
-  splunk_token       = local.router_api_defaults.splunk_token
-  splunk_index       = local.router_api_defaults.splunk_index
+  splunk_url         = local.defaults.splunk_url
+  splunk_token       = local.defaults.splunk_token
+  splunk_index       = local.defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.router_api_defaults.cpu
   memory             = local.router_api_defaults.memory

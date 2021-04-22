@@ -38,10 +38,6 @@ locals {
       data.terraform_remote_state.govuk_aws_mongo.outputs.mongo_2_service_dns_name,
       data.terraform_remote_state.govuk_aws_mongo.outputs.mongo_3_service_dns_name,
     ])
-
-    splunk_url   = local.defaults.splunk_url
-    splunk_token = local.defaults.splunk_token
-    splunk_index = local.defaults.splunk_index
   }
 }
 
@@ -68,9 +64,9 @@ module "frontend" {
   }]
   environment_variables = local.frontend_defaults.environment_variables
   secrets_from_arns     = local.frontend_defaults.secrets_from_arns
-  splunk_url            = local.frontend_defaults.splunk_url
-  splunk_token          = local.frontend_defaults.splunk_token
-  splunk_index          = local.frontend_defaults.splunk_index
+  splunk_url            = local.defaults.splunk_url
+  splunk_token          = local.defaults.splunk_token
+  splunk_index          = local.defaults.splunk_index
   aws_region            = data.aws_region.current.name
   cpu                   = local.frontend_defaults.cpu
   memory                = local.frontend_defaults.memory
@@ -108,9 +104,9 @@ module "draft_frontend" {
     }
   )
   secrets_from_arns  = local.frontend_defaults.secrets_from_arns
-  splunk_url         = local.frontend_defaults.splunk_url
-  splunk_token       = local.frontend_defaults.splunk_token
-  splunk_index       = local.frontend_defaults.splunk_index
+  splunk_url         = local.defaults.splunk_url
+  splunk_token       = local.defaults.splunk_token
+  splunk_index       = local.defaults.splunk_index
   aws_region         = data.aws_region.current.name
   cpu                = local.frontend_defaults.cpu
   memory             = local.frontend_defaults.memory
