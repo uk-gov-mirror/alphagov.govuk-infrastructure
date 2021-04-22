@@ -11,6 +11,7 @@ locals {
       "evaluation_interval" : "1m",
       "scrape_interval" : "1m",
       "scrape_timeout" : "10s"
+      # TODO: set external_labels to identify the source Prometheus replica for deduplication (https://docs.aws.amazon.com/prometheus/latest/userguide/AMP-ingest-dedupe.html)
     },
     "remote_write" : [
       {
@@ -73,7 +74,7 @@ resource "aws_ecs_service" "prometheus" {
   name          = "prometheus"
   cluster       = aws_ecs_cluster.cluster.id
   launch_type   = "FARGATE"
-  desired_count = 2
+  desired_count = 1 # TODO: run 2 replicas once we've sorted out deduplication.
 
   load_balancer {
     target_group_arn = module.prometheus_public_alb.target_group_arn
