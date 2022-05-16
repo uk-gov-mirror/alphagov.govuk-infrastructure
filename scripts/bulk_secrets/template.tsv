@@ -1,0 +1,41 @@
+Name	Description	SecretString
+govuk/smokey/signon-account	Email address and password for the Signon account which Smokey uses when testing publisher apps. Field names are `email` and `password`.	
+govuk/logit-host	Credentials for sending logs to logit.io (managed ELK stack)	
+govuk/dex/github	GitHub OAuth token to allow Dex to use GitHub to authenticate users.	
+govuk/dex/argo-workflows	OAuth Client ID and Client Secret for Argo Workflows to do single-sign-on via Dex.	
+govuk/dex/argocd	OAuth Client ID and Client Secret for ArgoCD to do single-sign-on via Dex.	
+govuk/dex/grafana	OAuth Client ID and Client Secret for Grafana to do single-sign-on via Dex.	
+govuk/common/shared-documentdb	"Credentials for the ""shared"" DocumentDB cluster. DocDB doesn't truly support multiple user accounts - they're all equivalent to the ""master"" account - and there are plans for apps to have their own DB instances, so not worth having per-app creds for now."	
+govuk/common/rails-secret-key-base	Rails SECRET_KEY_BASE, primarily used for encrypting Rails session cookies. Shared between apps until we implement automatic generation and rotation per-app. Generated with openssl rand -hex 64	
+govuk/authenticating-proxy/jwt-auth-secret	Secret key for encrypting/decrypting JWT authentication tokens for authenticating-proxy. Shared between authenticating-proxy, which decodes the tokens, and asset-manager, publisher, content-publisher and collections-publisher.	
+govuk/dex/prometheus	OAuth Client ID and Client Secret for Prometheus to do single-sign-on via Dex.	
+govuk/dex/alert-manager	OAuth Client ID and Client Secret for Alertmanager to do single-sign-on via Dex.	
+govuk/slack-webhook-url	Webhook URL (including API key) for Argo to send Slack notifications to gds.slack.com.	
+govuk/argo-events-webhook-token		
+govuk/whitehall/notify		
+govuk/frontend/notify		
+govuk/signon/notify		
+govuk/feedback/notify	"The GOV.UK Notify API key belonging to Feedback.
+"	
+govuk/whitehall/link-checker-api-callback-token	"Whitehall uses this for verification of batch-completion webhook
+(i.e. callback) requests from Link Checker API. See
+https://github.com/alphagov/link-checker-api/blob/main/docs/api.md#verifying-the-webhook-request"	
+govuk/whitehall/mysql-primary		
+govuk/signon/mysql		
+govuk/signon/devise-pepper	Key which Devise (library in Signon) needs in order to compare password hashes when authenticating an account.	
+govuk/signon/devise-secret	Devise (authentication library in Signon) uses this in preference to Rails' SECRET_KEY_BASE.	
+govuk/email-alert/auth	Common token between email-alert-frontend and email-alert-api used to verify messages.	
+govuk/router/htpasswd	"htpasswd file containing Basic Auth usernames and password hashes for the nginx in front of Router. To generate a password hash:
+
+brew install httpd
+htpasswd -nBC10 $username
+
+It'll prompt for the new password."	
+govuk/smartanswers/companies-house		
+govuk/smartanswers/zendesk-client		
+govuk/feedback/assisted-digital-google-sheet	Google service account for accessing the spreadsheet for Assisted Digital feedback, plus the ID of the sheet itself.  https://github.com/alphagov/feedback/blob/264cd13/docs/assisted_digital_feedback.md	
+govuk/github/govuk-ci	Access token for the govuk-ci GitHub user	
+govuk/alphagov-repo-creds	Used by Argo for govuk-ci GitHub user auth to repos.	
+govuk/kubescape	API key for our Armosec Kubescape account.	
+govuk/frontend/elections-api		
+govuk/fastly/api	Only used to get metrics from Fastly	
