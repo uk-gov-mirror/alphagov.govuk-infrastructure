@@ -1,0 +1,60 @@
+# USAGE
+# -----
+#
+# on:
+#   workflow_dispatch: {}
+#   push:
+#     branches:
+#       - main
+#     paths-ignore:
+#       - "Jenkinsfile"
+#       - ".git**"
+#
+# jobs:
+#   ci:
+#     uses: alphagov/govuk-infrastructure/.github/workflows/ci.yaml@main
+
+
+# REUSABLE WORKFLOW
+# -----------------
+name: CI
+
+on:
+  workflow_call: {}
+
+jobs:
+  test:
+     name: Test
+     runs-on: ubuntu-latest
+     env:
+       RAILS_ENV: test
+       GOVUK_CONTENT_SCHEMAS_PATH: vendor/govuk-content-schemas
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@v3
+
+       - name: Checkout GOV.UK Content Schemas
+         uses: actions/checkout@v3
+         with:
+           repository: alphagov/govuk-content-schemas
+           ref: deployed-to-production
+           path: vendor/govuk-content-schemas
+
+       - name: Setup Ruby
+         uses: ruby/setup-ruby@v1
+         with:
+           bundler-cache: true
+
+       - name: Setup Node
+         uses: actions/setup-node@v3
+         with:
+           cache: 'yarn'
+
+       - name: Install JavaScript dependencies
+         run: yarn install --frozen-lockfile
+
+       - name: Run Brakeman
+         run: bundle exec brakeman . --except CheckRenderInline
+
+       - name: Run tests
+         run: bundle exec rake
