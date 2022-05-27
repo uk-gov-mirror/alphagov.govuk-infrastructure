@@ -6,8 +6,9 @@
 #
 # jobs:
 #   deploy-to-ec2:
-#     uses: alphagov/govuk-infrastructure/.github/workflows/deployto-ec2.yaml@main
+#     uses: alphagov/govuk-infrastructure/.github/workflows/deploy-to-ec2.yaml@main
 #     secrets:
+#       GOVUK_CI_JENKINS_USERNAME: ${{ secrets.GOVUK_CI_JENKINS_USERNAME }}
 #       GOVUK_CI_JENKINS_TOKEN: ${{ secrets.GOVUK_CI_JENKINS_TOKEN }}
 #       GOVUK_CI_JENKINS_URL: ${{ secrets.GOVUK_CI_JENKINS_URL }}
 
@@ -24,6 +25,8 @@ on:
         required: true
         type: string
     secrets:
+      GOVUK_CI_JENKINS_USERNAME:
+        required: true
       GOVUK_CI_JENKINS_TOKEN:
         required: true
       GOVUK_CI_JENKINS_URL:
@@ -38,6 +41,7 @@ jobs:
         env:
           RELEASE_TAG: ${{ inputs.releaseTag }}
           REPO_NAME: ${{ github.event.repository.name }}
+          GOVUK_CI_JENKINS_USERNAME: ${{ secrets.GOVUK_CI_JENKINS_USERNAME }}
           GOVUK_CI_JENKINS_TOKEN: ${{ secrets.GOVUK_CI_JENKINS_TOKEN }}
           GOVUK_CI_JENKINS_URL: ${{ secrets.GOVUK_CI_JENKINS_URL }}
         run: |
