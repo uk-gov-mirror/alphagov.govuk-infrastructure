@@ -1,0 +1,48 @@
+# USAGE
+# -----
+#
+# on:
+#   workflow_dispatch: {}
+#
+# jobs:
+#   deploy-to-ec2:
+#     uses: alphagov/govuk-infrastructure/.github/workflows/deployto-ec2.yaml@main
+#     secrets:
+#       GOVUK_CI_JENKINS_TOKEN: ${{ secrets.GOVUK_CI_JENKINS_TOKEN }}
+#       GOVUK_CI_JENKINS_URL: ${{ secrets.GOVUK_CI_JENKINS_URL }}
+
+# REUSABLE WORKFLOW
+# -----------------
+
+name: Deploy to EC2
+
+on:
+  workflow_call:
+    inputs:
+      releaseTag:
+        description: 'The release tag to deploy'
+        required: true
+        type: string
+    secrets:
+      GOVUK_CI_JENKINS_TOKEN:
+        required: true
+      GOVUK_CI_JENKINS_URL:
+        required: true
+
+jobs:
+  trigger-jenkins-deployment:
+    name: Trigger jenkins deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send webhook
+        env:
+          RELEASE_TAG: ${{ inputs.releaseTag }}
+          REPO_NAME: ${{ github.event.repository.name }}
+          GOVUK_CI_JENKINS_TOKEN: ${{ secrets.GOVUK_CI_JENKINS_TOKEN }}
+          GOVUK_CI_JENKINS_URL: ${{ secrets.GOVUK_CI_JENKINS_URL }}
+        run: |
+          curl \
+            "${GOVUK_CI_JENKINS_URL}/job/Deploy_App_Downstream/buildWithParameters" \
+            --user "${GOVUK_CI_JENKINS_USERNAME}:${GOVUK_CI_JENKINS_TOKEN}" \
+            --data "TARGET_APPLICATION=${REPO_NAME}" \
+            --data "TAG=${RELEASE_TAG}"
