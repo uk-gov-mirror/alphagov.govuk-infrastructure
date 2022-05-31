@@ -20,7 +20,13 @@
 name: CI
 
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      jsDependencies:
+        description: 'Install node, yarn and js dependencies'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   test:
@@ -46,11 +52,13 @@ jobs:
            bundler-cache: true
 
        - name: Setup Node
+         if: ${{ inputs.jsDependencies }}
          uses: actions/setup-node@v3
          with:
            cache: 'yarn'
 
        - name: Install JavaScript dependencies
+         if: ${{ inputs.jsDependencies }}
          run: yarn install --frozen-lockfile
 
        - name: Run Brakeman
