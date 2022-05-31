@@ -22,6 +22,11 @@ name: CI
 on:
   workflow_call:
     inputs:
+      requiresMongoDB:
+        description: 'Run MongoDB'
+        required: false
+        default: false
+        type: boolean
       jsDependencies:
         description: 'Install node, yarn and js dependencies'
         required: false
@@ -63,6 +68,11 @@ jobs:
 
        - name: Run Brakeman
          run: bundle exec brakeman . --except CheckRenderInline
+
+       - name: Start MongoDB
+         uses: supercharge/mongodb-github-action@1.7.0
+         with:
+           mongodb-version: 2.6
 
        - name: Run tests
          run: bundle exec rake
