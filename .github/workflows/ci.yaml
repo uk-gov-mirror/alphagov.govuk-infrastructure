@@ -22,6 +22,18 @@ name: CI
 on:
   workflow_call:
     inputs:
+      databaseUrl:
+        description: 'The database url'
+        required: false
+        type: string
+      mysqlUser:
+        description: 'The username for the MySQL database'
+        required: false
+        type: string
+      mysqlPassword:
+        description: 'The password for the MySQL database'
+        required: false
+        type: string
       requiresMongoDB:
         description: 'Run MongoDB'
         required: false
@@ -70,9 +82,32 @@ jobs:
          run: bundle exec brakeman . --except CheckRenderInline
 
        - name: Start MongoDB
+         if: ${{ inputs.requiresMongoDB }}
          uses: supercharge/mongodb-github-action@1.7.0
          with:
            mongodb-version: 2.6
 
+       - name: Start MySQL
+         if: ${{ inputs.mysqlUser && inputs.mysqlPassword }}
+         env:
+           USERNAME: ${{ inputs.mysqlUser }}
+           PASSWORD: ${{ inputs.mysqlPassword }}
+           MYSQL_COMMAND: "mysql -h 127.0.0.1 -P 3306 -u root"
+         run: |
+           sudo service mysql stop
+           docker run -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=true -d mysql:8.0
+           sleep 10
+           $MYSQL_COMMAND -e "CREATE USER '${USERNAME}'@'%' IDENTIFIED BY '${PASSWORD}';"
+           $MYSQL_COMMAND -e "GRANT ALL PRIVILEGES ON *.* TO '${USERNAME}'@'%' WITH GRANT OPTION;"
+           $MYSQL_COMMAND -e "FLUSH PRIVILEGES;"
+
+       - name: Configure database
+         if: ${{ (inputs.mysqlUser && inputs.mysqlPassword) || inputs.requiresMongoDB }}
+         env:
+           TEST_DATABASE_URL: ${{ inputs.databaseUrl }}
+         run: bundle exec rails db:setup
+
        - name: Run tests
+         env:
+           TEST_DATABASE_URL: ${{ inputs.databaseUrl }}
          run: bundle exec rake
