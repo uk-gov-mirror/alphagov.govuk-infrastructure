@@ -39,6 +39,11 @@ on:
         required: false
         default: false
         type: boolean
+      requiresRedis:
+        description: 'Run Redis'
+        required: false
+        default: false
+        type: boolean
       jsDependencies:
         description: 'Install node, yarn and js dependencies'
         required: false
@@ -86,6 +91,12 @@ jobs:
          uses: supercharge/mongodb-github-action@1.7.0
          with:
            mongodb-version: 2.6
+
+       - name: Start Redis
+         if: ${{ inputs.requiresRedis }}
+         uses: supercharge/redis-github-action@1.4.0
+         with:
+           redis-version: 6.0
 
        - name: Start MySQL
          if: ${{ inputs.mysqlUser && inputs.mysqlPassword }}
