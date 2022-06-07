@@ -1,0 +1,43 @@
+# USAGE
+# -----
+#
+# on:
+#   workflow_dispatch:
+#     branches:
+#       - main
+#
+# jobs:
+#   create-deployment:
+#     uses: alphagov/govuk-infrastructure/.github/workflows/create-deployment.yaml@main
+#     secrets:
+#       USER_GITHUB_TOKEN: ${{ secrets.USER_GITHUB_TOKEN }}
+#
+# REUSABLE WORKFLOW
+# -----------------
+
+name: Create deployment
+
+on:
+  workflow_call:
+    secrets:
+      USER_GITHUB_TOKEN:
+        required: true
+
+jobs:
+  create-deployment:
+    name: Create deployment
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.USER_GITHUB_TOKEN }}
+    steps:
+      - name: Create deployment
+        run: |
+          gh api repos/${{ github.repository }}/deployments --input - << EOF
+            {
+              "ref": "${{ github.ref }}",
+              "description": "Deploy request from CI Workflow",
+              "environment": "integration",
+              "required_contexts": [],
+              "auto_merge": false
+            }
+          EOF
