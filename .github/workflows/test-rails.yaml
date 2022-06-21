@@ -64,36 +64,6 @@ jobs:
        RAILS_ENV: test
        GOVUK_CONTENT_SCHEMAS_PATH: vendor/govuk-content-schemas
      steps:
-       - name: Setup MySQL
-         id: setup-mysql
-         if: ${{ inputs.requiresMySQL }}
-         env:
-           MYSQL_USERNAME: ${{ inputs.mysqlUsername }}
-           MYSQL_PASSWORD: ${{ inputs.mysqlPassword }}
-           MYSQL_PORT: 3306
-         run: |
-           # Stop the MySQL service running on the runner node
-           sudo service mysql stop
-
-           docker run --name mysql --publish "${MYSQL_PORT}:3306" --detach \
-            --env MYSQL_ALLOW_EMPTY_PASSWORD=true \
-            --health-cmd "mysqladmin ping --silent" \
-            --health-interval 10s \
-            --health-timeout 5s \
-            --health-retries 5 \
-            mysql:8.0
-
-           # Wait for MySQL to be ready to accept connections
-           while [ $(docker inspect --format "{{json .State.Health.Status }}" mysql) != "\"healthy\"" ]; do printf "."; sleep 1; done
-
-           # Create user for running tests
-           MYSQL_COMMAND="mysql -h 127.0.0.1 -P ${MYSQL_PORT} -u root"
-
-           $MYSQL_COMMAND -e "CREATE USER '${MYSQL_USERNAME}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
-           $MYSQL_COMMAND -e "GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USERNAME}'@'%' WITH GRANT OPTION;"
-           $MYSQL_COMMAND -e "FLUSH PRIVILEGES;"
-
-           echo "::set-output name=db-url::mysql2://${MYSQL_USERNAME}:${MYSQL_PASSWORD}@127.0.0.1:3306"
 
        - name: Checkout repository
          uses: actions/checkout@v3
@@ -134,6 +104,34 @@ jobs:
          uses: supercharge/redis-github-action@1.4.0
          with:
            redis-version: 6.0
+
+       - name: Setup MySQL
+         id: setup-mysql
+         if: ${{ inputs.requiresMySQL }}
+         env:
+           MYSQL_USERNAME: ${{ inputs.mysqlUsername }}
+           MYSQL_PASSWORD: ${{ inputs.mysqlPassword }}
+           MYSQL_PORT: 3306
+         run: |
+           # Stop the MySQL service running on the runner node
+           sudo service mysql stop
+
+           docker run --name mysql --publish "${MYSQL_PORT}:3306" --detach \
+            --env MYSQL_ROOT_PASSWORD=root \
+            --health-cmd "mysqladmin ping --silent" \
+            --health-interval 10s \
+            --health-timeout 5s \
+            --health-retries 5 \
+            mysql:8.0
+
+           # Wait for MySQL to be ready to accept connections
+           while [ $(docker inspect --format "{{json .State.Health.Status }}" mysql) != "\"healthy\"" ]; do
+             printf "."
+             sleep 1
+           done
+           echo "MySQL available."
+
+           echo "::set-output name=db-url::mysql2://root:root@127.0.0.1:3306"
 
        - name: Setup Rails database
          if: ${{ inputs.requiresMySQL || inputs.requiresMongoDB }}
