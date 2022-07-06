@@ -54,10 +54,12 @@ jobs:
         GEM_HOST_API_KEY: ${{ secrets.GEM_HOST_API_KEY }}
       run: |
         VERSION=$(ruby -e "puts eval(File.read('$GEM_NAME.gemspec')).version")
-        GEM_VERSION=$(gem list --exact --remote $GEM_NAME)
-        if [ "$GEM_VERSION" != "$GEM_NAME (${VERSION})" ]; then
+        GEM_VERSION=$(gem list --exact --remote $GEM_NAME | sed 's/.*(\(.*\))/\1/')
+        if ruby -e "exit Gem::Version.new('$VERSION') > Gem::Version.new('$GEM_VERSION')"; then
           gem build ${GEM_NAME}.gemspec
           gem push "${GEM_NAME}-${VERSION}.gem"
+        else
+          echo "Skipping build and push of gem version ($VERSION), as this is not newer than the remote version ($GEM_VERSION)"
         fi
         if ! git ls-remote --tags --exit-code origin v${VERSION}; then
           git tag v${VERSION}
