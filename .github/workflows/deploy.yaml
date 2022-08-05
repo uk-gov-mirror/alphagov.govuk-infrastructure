@@ -87,10 +87,8 @@ jobs:
           MANUAL_DEPLOY: ${{ github.event_name == 'workflow_dispatch' }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh workflow run "Update image tag" \
-            -R alphagov/govuk-helm-charts \
-            -r update-image-tag-workflow \
-            -F "image_tag=${IMAGE_TAG}" \
-            -F "repo=${REPO_NAME}" \
-            -F "environment=${ENVIRONMENT}" \
-            -f "manual_deploy=${MANUAL_DEPLOY}"
+          gh api "/repos/alphagov/${REPO_NAME}/deployments" \
+          -f "ref=${IMAGE_TAG}" \
+          -f "environment=${ENVIRONMENT}" \
+          -f "payload={ \"manual_deploy\": \"${MANUAL_DEPLOY}\" }" \
+          -F auto_merge=false
