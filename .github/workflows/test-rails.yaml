@@ -65,6 +65,11 @@ on:
         required: false
         default: ''
         type: string
+      framework:
+        description: 'Which framework is being used'
+        required: false
+        default: 'rails'
+        type: string
 
 jobs:
   test:
@@ -106,6 +111,7 @@ jobs:
          run: yarn install --frozen-lockfile
 
        - name: Run Brakeman
+         if: ${{ inputs.framework == 'rails' }}
          run: bundle exec brakeman . --except CheckRenderInline
 
        - name: Setup MongoDB
