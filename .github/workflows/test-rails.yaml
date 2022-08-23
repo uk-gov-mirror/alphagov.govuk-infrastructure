@@ -151,10 +151,21 @@ jobs:
            # Stop the MySQL service running on the runner node
            sudo service mysql stop
 
-           docker run --name mysql --publish "${MYSQL_PORT}:3306" --detach --env MYSQL_ALLOW_EMPTY_PASSWORD=true mysql:8.0
+           docker run \
+            --name mysql \
+            --publish "${MYSQL_PORT}:3306" \
+            --detach \
+            --health-cmd "mysqladmin ping --silent" \
+            --health-interval "5s" \
+            --env MYSQL_ALLOW_EMPTY_PASSWORD=true \
+            mysql:8.0
 
            # Wait for MySQL to be ready to accept connections
-           sleep 10
+           echo "Waiting for MySQL to be ready"
+           while [ $(docker inspect --format "{{json .State.Health.Status }}" mysql) != "\"healthy\"" ]; do
+             printf "."
+             sleep 1
+           done
 
            # Create user for running tests
            MYSQL_COMMAND="mysql -h 127.0.0.1 -P ${MYSQL_PORT} -u root"
