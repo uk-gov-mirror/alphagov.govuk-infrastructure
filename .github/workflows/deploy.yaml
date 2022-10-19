@@ -72,7 +72,7 @@ on:
         required: true
       WEBHOOK_URL:
         required: true
-      GOVUK_CI_GITHUB_API_TOKEN:
+      GH_TOKEN:
         required: true
 
 jobs:
@@ -85,7 +85,7 @@ jobs:
       - name: Check deploy permissions
         id: deploy-permissions
         env:
-          GH_TOKEN: ${{ secrets.GOVUK_CI_GITHUB_API_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TEAM: gov-uk-production-deploy
           GITHUB_USER: ${{ github.triggering_actor }}
         run: |
