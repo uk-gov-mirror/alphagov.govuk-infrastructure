@@ -9,7 +9,7 @@ runs:
         path: |
           public/assets
           tmp/cache/assets/sprockets
-        key: ${{ runner.os }}-rails-assets-${{ github.ref }}-${{ hashFiles('app/assets/**/*', '**/Gemfile.lock', '**/yarn.lock') }}
+        key: ${{ runner.os }}-rails-assets-${{ github.ref }}-${{ hashFiles('app/assets/**/*', '**/Gemfile.lock', '**/yarn.lock', 'config/**/*') }}
         restore-keys: |
           ${{ runner.os }}-rails-assets-${{ github.ref }}
 
@@ -18,3 +18,9 @@ runs:
         RAILS_ENV: test
       shell: bash
       run: bundle exec rails assets:precompile
+
+    - name: Remove old compiled assets
+      env:
+        RAILS_ENV: test
+      shell: bash
+      run: bundle exec rails assets:clean
