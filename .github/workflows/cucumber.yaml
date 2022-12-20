@@ -1,0 +1,38 @@
+name: Run Cucuber
+
+on:
+  workflow_call:
+    inputs:
+      profile:
+        description: 'Which profile to use'
+        required: false
+        default: 'default'
+        type: string
+
+jobs:
+  run-rubocop:
+    name: Run Cucumber
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Precompile Rails assets
+        uses: alphagov/govuk-infrastructure/.github/actions/precompile-rails-assets@composite-actions
+
+      - name: Run Cucumber
+        run: bundle exec cucumber --profile ${{ inputs.profile }}
