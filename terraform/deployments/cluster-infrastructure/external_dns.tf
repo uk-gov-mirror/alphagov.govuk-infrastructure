@@ -8,7 +8,7 @@
 
 locals {
   external_dns_service_account_name = "external-dns"
-  external_dns_zone_name            = trimsuffix("${var.external_dns_subdomain}.${data.tfe_outputs.vpc.nonsensitive_values.external_root_zone_name}", ".")
+  external_dns_zone_name            = trimsuffix("${var.external_dns_subdomain}.", ".")
 }
 
 module "external_dns_iam_role" {
