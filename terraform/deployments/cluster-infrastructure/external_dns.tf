@@ -51,7 +51,7 @@ resource "aws_route53_zone" "cluster_public" {
 }
 
 resource "aws_route53_record" "cluster_public_ns_parent" {
-  zone_id = data.tfe_outputs.vpc.nonsensitive_values.external_root_zone_id
+  zone_id = "AAAAAAAAA"
   name    = var.external_dns_subdomain
   type    = "NS"
   ttl     = 21600
